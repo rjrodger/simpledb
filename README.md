@@ -49,25 +49,27 @@ Secure connections are not supported on node 0.3.x.
 
 ## Installation
 
-   npm install node-simpledb
+    npm install node-simpledb
 
 And in your code:
-   var simpledb = require('node-simpledb')
+
+    var simpledb = require('node-simpledb')
 
 Or clone the git repository:
-   git clone git://github.com/rjrodger/node-simpledb.git
+    git clone git://github.com/rjrodger/node-simpledb.git
 
 
 ## Usage
 
-This module uses the standard callback convention. All functions take
+This module uses the node.js-style callback convention. All functions take
 a callback function as their last parameter. This callback function should accept three arguments:
 
     callback( error, result, meta )
 
-Where error is object describing any errors that occured. If the
-function was successful then error is null. So you check if error is
-null to see if you can continue working:
+Where error is an object ({Code:'...',Message:'...'}) describing any errors that occured. If the
+function was successful then error is null. 
+
+So, you check if error is null to see if you can continue working:
 
     sdb.listDomains( functions( error, result, meta ) {
       if( error ) {
@@ -79,10 +81,10 @@ null to see if you can continue working:
     })
 
 The result parameter contains the results of a successful action and
-its nature depends on the action. It could be a string, and array or
-and object.
+what it is depends on the action. It could be a string, an array or
+an object.
 
-The meta parameter contains a description of the request, including the underlying details from Amazon.
+The _meta_ parameter contains a description of the request, including the underlying details from Amazon.
 
     console.log( JSON.stringify(meta) )
 
@@ -112,6 +114,7 @@ options: some required
    * expbase: optional, default=4, exponent base, for the formula that calculates delay time when SimpleDB fails
 
 logger: optional
+
   See the section on logging below
 
 
@@ -160,10 +163,10 @@ For type=status, fired after each retry, the arguments are:
 
 ## Testing
 
-The unit tests use expresso.
+The unit tests use expresso: [https://github.com/visionmedia/expresso]
 
-   npm install expresso
-   npm install eyes
+    npm install expresso
+    npm install eyes
 
 To configure your keys, edit the test/keys.js file.
 The tests are in test/simpledb.test.js
