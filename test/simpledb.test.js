@@ -108,19 +108,61 @@ module.exports = {
     try { sdb = new simpledb.SimpleDB({keyid:'foo'}) } catch(e) { assert.equal('simpledb: no secret',e) }
     assert.isNull(sdb)
 
+    var noop = function(){}
+    var noerr = function(err){
+      assert.isNull(err)
+    }
 
-    sdb = new simpledb.SimpleDB({keyid:'foo',secret:'bar'})
-    eyes.inspect(sdb)
-   
-    sdb.listDomains(function(err,res,meta){
-      debugres(err,res,meta)
-      assert.isNotNull(err)
+    sdb = new simpledb.SimpleDB({keyid:'foo',secret:'bar',test:true})
+
+    function nocallback(f){
+      try { sdb[f](); assert.fail() } catch(e) { assert.equal('no callback function',e) }
+    }
+
+    nocallback('listDomains')
+
+
+    function nostring(i,f,name){
+      var cberr = function(suffix) { 
+        return function(err){
+          eyes.inspect(err)
+          assert.isNotNull(err)
+          assert.equal('$Library',err.Code)
+          assert.equal(name+suffix,err.Message) 
+        }
+      } 
+      var calls = [[null,' is null'],['',' is empty'],[{},' is not a string']]
+      calls.forEach(function(spec){
+        var av   = spec[0]
+        var errf = cberr(spec[1])
+        sdb[f](0==i?av:'foo',1==i?av:errf,errf,errf)
+      })
+    }
+
+    nostring(0,'request','action')
+
+
+    var df = ['createDomain','domainMetadata','deleteDomain','batchPutItem','select']
+    df.forEach(function(f){
+      util.debug(f)
+      nocallback(f)
+      nostring(0,f,'select'==f?'query':'domain')
+      if( 'batchPutItem'!=f ) { sdb[f]('foo',noerr,noerr) }
     })
+
+    var df = ['putItem','getItem','deleteItem']
+    df.forEach(function(f){
+      util.debug(f)
+      nocallback(f)
+      nostring(0,f,'domain')
+      nostring(1,f,'itemname')
+    })
+
 
 
     var keys = require('./keys.js')
     sdb = new simpledb.SimpleDB({keyid:keys.id,secret:keys.secret})
-    //eyes.inspect(sdb)
+    eyes.inspect(sdb)
 
     var orighandle = sdb.handle
     var againhandle = function(op,q,start,tryI,res,stop,callback){
@@ -143,7 +185,7 @@ module.exports = {
       debugres(err,res,meta)
       assert.isNull(err)
 
-    ;sdb.describeDomain('simpledbtest',function(err,res,meta){
+    ;sdb.domainMetadata('simpledbtest',function(err,res,meta){
       debugres(err,res,meta)
       assert.isNull(err)
 
@@ -157,7 +199,7 @@ module.exports = {
       assert.ok( 1 <= res.length )
       sdb.handle = orighandle
       
-    ;sdb.put('simpledbtest','item1',
+    ;sdb.putItem('simpledbtest','item1',
       {
         foo:1,
         bar:'BAR',
@@ -166,18 +208,65 @@ module.exports = {
       debugres(err,res,meta)
       assert.isNull(err)
 
-    ;sdb.get('simpledbtest','item1',function(err,res,meta){
+    ;sdb.getItem('simpledbtest','item1',function(err,res,meta){
       debugres(err,res,meta)
       assert.isNull(err)
+      assert.equal('item1',res.$ItemName)
       assert.equal(1,parseInt(res.foo,10))
       assert.equal('BAR',res.bar)
       assert.equal('one,two',res.woz)
 
-    ;sdb.remove('simpledbtest','item1',function(err,res,meta){
+    ;sdb.request("GetAttributes", 
+      {
+        DomainName:'simpledbtest',
+        ItemName:'item1',
+      },
+      function(err,res,meta){
+        debugres(err,res,meta)
+        assert.isNull(err)
+
+    ;sdb.select("select * from simpledbtest where bar = 'BAR'",function(err,res,meta){
+      debugres(err,res,meta)
+      assert.isNull(err)
+      assert.ok( 1 == res.length )
+      assert.equal('item1',res[0].$ItemName)
+      assert.equal( 'BAR', res[0].bar )
+
+    ;sdb.batchPutItem('simpledbtest',
+      [ 
+        { $ItemName:'b1', batch:'yes', field:'one'}, 
+        { $ItemName:'b2', batch:'yes', field:'two'}
+      ],function(err,res,meta){
       debugres(err,res,meta)
       assert.isNull(err)
 
-    }) }) }) }) }) })
+    ;sdb.select("select * from simpledbtest where batch = 'yes'",function(err,res,meta){
+      debugres(err,res,meta)
+      assert.isNull(err)
+      assert.ok( 2 == res.length )
+      assert.equal('b1',res[0].$ItemName)
+      assert.equal('one', res[0].field )
+      assert.equal('b2',res[1].$ItemName)
+      assert.equal('two', res[1].field )
+
+    ;sdb.deleteItem('simpledbtest','item1',function(err,res,meta){
+      debugres(err,res,meta)
+      assert.isNull(err)
+
+    ;sdb.deleteDomain('simpledbtest',function(err,res,meta){
+      debugres(err,res,meta)
+      assert.isNull(err)
+
+
+      // test bad key
+      sdb = new simpledb.SimpleDB({keyid:'foo',secret:'bar'})
+      eyes.inspect(sdb)
+   
+    ;sdb.listDomains(function(err,res,meta){
+      debugres(err,res,meta)
+      assert.isNotNull(err)
+
+    }) }) }) }) }) }) }) }) }) }) }) })
   }
 
 }
