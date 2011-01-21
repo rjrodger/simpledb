@@ -113,7 +113,7 @@ module.exports = {
       assert.isNull(err)
     }
 
-    sdb = new simpledb.SimpleDB({keyid:'foo',secret:'bar',test:true})
+    sdb = new simpledb.SimpleDB({keyid:'foo',secret:'bar',test:true},simpledb.debuglogger)
 
     function nocallback(f){
       try { sdb[f](); assert.fail() } catch(e) { assert.equal('no callback function',e) }
@@ -121,11 +121,10 @@ module.exports = {
 
     nocallback('listDomains')
 
-
     function nostring(i,f,name){
       var cberr = function(suffix) { 
         return function(err){
-          eyes.inspect(err)
+          //eyes.inspect(err)
           assert.isNotNull(err)
           assert.equal('$Library',err.Code)
           assert.equal(name+suffix,err.Message) 
@@ -159,10 +158,19 @@ module.exports = {
     })
 
 
+    // overrides
+    sdb = new simpledb.SimpleDB({keyid:'foo',secret:'bar'},simpledb.debuglogger)
+
+    sdb.handle = function(op,q,start,tryI,res,stop,callback){ assert.equal('true',q.ConsistentRead) }
+    sdb.getItem('domain','itemname',function(){
+
+      sdb.handle = function(op,q,start,tryI,res,stop,callback){ assert.equal('false',q.ConsistentRead) }
+      sdb.getItem('domain','itemname',{ConsistentRead:'false'},function(){})
+    })
 
     var keys = require('./keys.js')
-    sdb = new simpledb.SimpleDB({keyid:keys.id,secret:keys.secret})
-    eyes.inspect(sdb)
+    sdb = new simpledb.SimpleDB({keyid:keys.id,secret:keys.secret},simpledb.debuglogger)
+    //eyes.inspect(sdb)
 
     var orighandle = sdb.handle
     var againhandle = function(op,q,start,tryI,res,stop,callback){
@@ -216,6 +224,15 @@ module.exports = {
       assert.equal('BAR',res.bar)
       assert.equal('one,two',res.woz)
 
+    ;sdb.getItem('simpledbtest','item1',{$AsArrays:true},function(err,res,meta){
+      debugres(err,res,meta)
+      assert.isNull(err)
+      assert.equal('item1',res.$ItemName)
+      assert.equal(1,parseInt(res.foo[0],10))
+      assert.equal('BAR',res.bar[0])
+      assert.equal('one',res.woz[0])
+      assert.equal('two',res.woz[1])
+
     ;sdb.request("GetAttributes", 
       {
         DomainName:'simpledbtest',
@@ -260,24 +277,26 @@ module.exports = {
 
       // test bad key
       sdb = new simpledb.SimpleDB({keyid:'foo',secret:'bar'})
-      eyes.inspect(sdb)
+      //eyes.inspect(sdb)
    
     ;sdb.listDomains(function(err,res,meta){
       debugres(err,res,meta)
       assert.isNotNull(err)
 
-    }) }) }) }) }) }) }) }) }) }) }) })
+    }) }) }) }) }) }) }) }) }) }) }) }) })
   }
 
 }
 
 
 function debugres(err,res,meta) {
+  /*
   util.debug(
     '\nerr: '+JSON.stringify(err)+
     '\nres: '+JSON.stringify(res)+
     '\nmeta:'+JSON.stringify(meta)
   )
+  */
 }
 
 
