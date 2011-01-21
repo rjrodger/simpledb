@@ -36,6 +36,7 @@ recommended in the SimpleDB developer guide
 This library depends on the excellent aws-lib module: https://github.com/mirkok/aws-lib
 
 Key Features:
+
    * simple API
    * fully configurable
    * detailed logging
@@ -95,6 +96,7 @@ over the requests. The logger parameter receives logging events so
 that you can debug and/or record SimpleDB interactions.
 
 options: some required
+
    * keyid: required, your Amazon AWS Key ID
    * secret: required, your Amazon Secret Key
    * secure: optional, default=false, if true, use HTTPS
@@ -123,20 +125,24 @@ prints to STDOUT is provided by simpledb.debuglogger:
 
 The logger callback accepts the following parameters:
     logger( type, date, ... )
+
    * type: string, one of create, request, handle, status
    * date: a Date object
    * ...: remaining arguments depend on type
 
 For type=create, fired when the simpledb.SimpleDB object is created, the arguments are:
+
    * opts: options object
    * awsopts: aws-lib options
 
 For type=request, fired just before a request is made to SimpleDB, the arguments are:
+
    * start: Date object, start time of request
    * action: string, name of SimpleDB action
    * query: full SimpleDB query
 
 For type=handle, fired after each response from SimpleDB, the arguments are:
+
    * start: Date object, start time of request
    * action: string, name of SimpleDB action
    * query: full SimpleDB query
@@ -144,6 +150,7 @@ For type=handle, fired after each response from SimpleDB, the arguments are:
    * response: result from SimpleDB
 
 For type=status, fired after each retry, the arguments are:
+
    * done: true if request has finally succeeded
    * tryIndex: count of attempts
    * last: true if this was the last attempt
