@@ -36,11 +36,11 @@ recommended in the SimpleDB developer guide
 This library depends on the excellent aws-lib module: https://github.com/mirkok/aws-lib
 
 Key Features:
-  * simple API
-  * fully configurable
-  * detailed logging
-  * all request attributes can be overridden
-  * fully tested
+   * simple API
+   * fully configurable
+   * detailed logging
+   * all request attributes can be overridden
+   * fully tested
 
 This is version 0.0.1 so there's probably still some wierdness - use at your risk.
 Secure connections are not supported on node 0.3.x.
@@ -95,19 +95,19 @@ over the requests. The logger parameter receives logging events so
 that you can debug and/or record SimpleDB interactions.
 
 options: some required
-  * keyid: required, your Amazon AWS Key ID
-  * secret: required, your Amazon Secret Key
-  * secure: optional, default=false, if true, use HTTPS
-  * consistent: optional, default=true, if true, ask for consistent reads
-  * test: optional, default=false, if true, don't actually send anything to SimpleDB
-  * host: optional, default=sdb.amazon.com, SimpleDB host
-  * path: optional, default=/, SimpleDB path
-  * version, optional, default=2009-04-15, SimpleDB API version
-  * maxtry: optional, default=4, maximum number of retries when SimpleDB fails
-  * delaymin: optional, default=0, minimum delay in milliseconds
-  * delayscale: optional, default=100, delay multiplier, in milliseconds
-  * randomdelay: optional, default=true, apply a random delay multiplier between 0 and 1
-  * expbase: optional, default=4, exponent base, for the formula that calculates delay time when SimpleDB fails
+   * keyid: required, your Amazon AWS Key ID
+   * secret: required, your Amazon Secret Key
+   * secure: optional, default=false, if true, use HTTPS
+   * consistent: optional, default=true, if true, ask for consistent reads
+   * test: optional, default=false, if true, don't actually send anything to SimpleDB
+   * host: optional, default=sdb.amazon.com, SimpleDB host
+   * path: optional, default=/, SimpleDB path
+   * version, optional, default=2009-04-15, SimpleDB API version
+   * maxtry: optional, default=4, maximum number of retries when SimpleDB fails
+   * delaymin: optional, default=0, minimum delay in milliseconds
+   * delayscale: optional, default=100, delay multiplier, in milliseconds
+   * randomdelay: optional, default=true, apply a random delay multiplier between 0 and 1
+   * expbase: optional, default=4, exponent base, for the formula that calculates delay time when SimpleDB fails
 
 logger: optional
   See the section on logging below
@@ -123,32 +123,32 @@ prints to STDOUT is provided by simpledb.debuglogger:
 
 The logger callback accepts the following parameters:
     logger( type, date, ... )
-  * type: string, one of create, request, handle, status
-  * date: a Date object
-  * ...: remaining arguments depend on type
+   * type: string, one of create, request, handle, status
+   * date: a Date object
+   * ...: remaining arguments depend on type
 
 For type=create, fired when the simpledb.SimpleDB object is created, the arguments are:
-  * opts: options object
-  * awsopts: aws-lib options
+   * opts: options object
+   * awsopts: aws-lib options
 
 For type=request, fired just before a request is made to SimpleDB, the arguments are:
-  * start: Date object, start time of request
-  * action: string, name of SimpleDB action
-  * query: full SimpleDB query
+   * start: Date object, start time of request
+   * action: string, name of SimpleDB action
+   * query: full SimpleDB query
 
 For type=handle, fired after each response from SimpleDB, the arguments are:
-  * start: Date object, start time of request
-  * action: string, name of SimpleDB action
-  * query: full SimpleDB query
-  * tryIndex: number of tries attempted, up to maxtry 
-  * response: result from SimpleDB
+   * start: Date object, start time of request
+   * action: string, name of SimpleDB action
+   * query: full SimpleDB query
+   * tryIndex: number of tries attempted, up to maxtry 
+   * response: result from SimpleDB
 
 For type=status, fired after each retry, the arguments are:
-  * done: true if request has finally succeeded
-  * tryIndex: count of attempts
-  * last: true if this was the last attempt
-  * delay: delay in milliseconds until this attempt
-  * err: any error that occurred
+   * done: true if request has finally succeeded
+   * tryIndex: count of attempts
+   * last: true if this was the last attempt
+   * delay: delay in milliseconds until this attempt
+   * err: any error that occurred
 
 
 ## Testing
