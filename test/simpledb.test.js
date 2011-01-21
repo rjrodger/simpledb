@@ -7,6 +7,8 @@ var eyes = require('eyes')
 
 var simpledb = require('../lib/simpledb.js')
 
+var keys = require('./keys.js')
+
 
 module.exports = {
   expbackoff: function() {
@@ -161,14 +163,13 @@ module.exports = {
     // overrides
     sdb = new simpledb.SimpleDB({keyid:'foo',secret:'bar'},simpledb.debuglogger)
 
-    sdb.handle = function(op,q,start,tryI,res,stop,callback){ assert.equal('true',q.ConsistentRead) }
+    sdb.handle = function(op,q,start,tryI,res,stop,callback){ assert.ok(!q.ConsistentRead) }
     sdb.getItem('domain','itemname',function(){
 
       sdb.handle = function(op,q,start,tryI,res,stop,callback){ assert.equal('false',q.ConsistentRead) }
       sdb.getItem('domain','itemname',{ConsistentRead:'false'},function(){})
     })
 
-    var keys = require('./keys.js')
     sdb = new simpledb.SimpleDB({keyid:keys.id,secret:keys.secret},simpledb.debuglogger)
     //eyes.inspect(sdb)
 
@@ -284,6 +285,22 @@ module.exports = {
       assert.isNotNull(err)
 
     }) }) }) }) }) }) }) }) }) }) }) }) })
+  },
+
+  example: function() {
+    var keys = require('./keys.mine.js')
+    sdb = new simpledb.SimpleDB({keyid:keys.id,secret:keys.secret},simpledb.debuglogger)
+
+    sdb.createDomain( 'yourdomain', function( error ) {
+
+      sdb.putItem('yourdomain', 'item1', {field1:'one', field2:'two'}, function( error ) {
+      
+        sdb.getItem('yourdomain', 'item1', function( error, result ) {
+          console.log( 'field1 = '+result.field1 )
+          console.log( 'field2 = '+result.field2 )
+        })
+      })
+    })
   }
 
 }
