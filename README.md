@@ -454,5 +454,8 @@ Here's some more information on SimpleDB:
 
 [Amazon AWS SimpleDB Developer Guide](http://docs.amazonwebservices.com/AmazonSimpleDB/latest/DeveloperGuide/)
 
+
+## Hacking around with real time charts
+
 ![](http://chartaca.com/point/adb6995d-b4b3-4edf-8892-a6d1a232483d/s.gif)
 [Chartaca Hit Chart](http://chartaca.com/adb6995d-b4b3-4edf-8892-a6d1a232483d) 
