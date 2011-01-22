@@ -43,6 +43,19 @@ Key Features:
    * all request attributes can be overridden
    * fully tested
 
+Core Functions:
+
+   * createDomain   (_'CreateDomain'_)
+   * domainMetadata (_'DomainMetadata'_)
+   * listDomains    (_'ListDomains'_)
+   * deleteDomain   (_'DeleteDomain'_)
+   * putItem        (_'PutAttributes'_)
+   * batchPutItem   (_'BatchPutAttributes'_)
+   * getItem        (_'GetAttributes'_)
+   * deleteItem     (_'DeleteAttributes'_)
+   * select         (_'Select'_)
+   * request        (any action)
+
 This is version 0.0.1 so there's probably still some wierdness - use at your risk.
 Secure connections are not supported on node 0.3.x.
 
@@ -66,10 +79,10 @@ a callback function as their last argument. This callback function should accept
 
     callback( error, result, meta )
 
-Where error is an object ({Code:'...',Message:'...'}) describing any errors that occured. If the
-function was successful then error is null. 
+Where error is an object `({Code:'...',Message:'...'})` describing any errors that occured. If the
+function was successful then _error_ is _null_. 
 
-So, you check if error is null to see if you can continue working:
+So, you check if _error_ is _null_ to see if you can continue working:
 
     sdb.listDomains( functions( error, result, meta ) {
       if( error ) {
@@ -81,10 +94,11 @@ So, you check if error is null to see if you can continue working:
     })
 
 The _result_ parameter contains the results of a successful action and
-what it is depends on the action. It could be a string, an array or
+what the _result_ parameter is depends on the action. It could be a string, an array or
 an object.
 
-The _meta_ parameter contains a description of the request, including the underlying details from Amazon.
+The _meta_ parameter contains a description of the request, including
+the underlying details from Amazon. Take a look with:
 
     console.log( JSON.stringify(meta) )
 
@@ -92,15 +106,14 @@ The _meta_ parameter contains a description of the request, including the underl
 ## Conventions
 
 Where possible, the SimpleDB naming style is preserved:
-CamelCaseBaby. Names of functions and their parameters also match SimpleDB
-as much as possible.
+`CamelCaseBaby`. Names of functions and their parameters also mostly match SimpleDB.
 
 The _simpledb.SimpleDB_ wrapper options (_maxtry_, _secure_, etc) are
-not directly to Amazon, and so have their own names.
+not directly related to Amazon, and so have their own names.
 
-It is sometimes necessary to embed meta directives into the Amazon
-query or result objects. These non-Amazon attributes always begin with
-$ character, but are in CamelCase. For example: $AsArrays.
+It is sometimes necessary to embed meta-directives into the Amazon
+_query_ or _result_ objects. These non-Amazon attributes always begin with
+the _$_ character, but are in `CamelCase`. For example: `$AsArrays`.
 
 This wrapper is based on the REST API. I looked at the SOAP API
 but... yeah. No X.509 for you. Yet.
@@ -108,9 +121,10 @@ but... yeah. No X.509 for you. Yet.
 
 ## API
 
-For the API examples, assume the following lines of code:
+For the API examples, assume the following lines of code at the top of your source code file:
 
     var simpledb = require('node-simpledb')
+
     var sdb = new simpledb.SimpleDB(
       {keyid:'YOUR_AWS_KEY_ID',secret:'YOUR_AWS_SECRET_KEY'},
       simpledb.debuglogger
@@ -118,49 +132,41 @@ For the API examples, assume the following lines of code:
 
 This gives you the standard wrapper, with a basic debugger that prints to STDOUT.
 
-You should really also read the Amazon SimpleDB documentation so that you understand how SimpleDB works.
+You should really also read the Amazon SimpleDB documentation so that you understand how SimpleDB works: http://docs.amazonwebservices.com/AmazonSimpleDB/latest/DeveloperGuide/
 
 As a get-out-of-jail, you can provide request attribute overrides. You
-supply these in an optional override object just before the callback
-argument. You can use can override on any of the SimpleDB action wrapper functions.
+supply these in an optional _override_ argument just before the callback
+argument. You can use an override on any of the SimpleDB action wrapper functions.
 
     sdb.getItem('domain','itemname', {ConsistentRead:'false'} ,function(err,res,meta){ ... })
 
-In the above code, _{ConsistentRead:'false'}_ is the optional override argument.
+In the above code, _{ConsistentRead:"false"}_ is the optional override argument.
 
 
 ### simpledb.SimpleDB
 
     var sdb = new simpledb.SimpleDB( options, logger )
 
-Create a new SimpleDB wrapper. The options argument gives you control
-over the requests. The logger argument receives logging events so
-that you can debug and/or record SimpleDB interactions.
+Create a new SimpleDB wrapper. The _options_ argument sets general
+options for the requests. The _logger_ argument receives logging events
+so that you can debug and/or record SimpleDB interactions.
 
-options: some required
+_options_: required
 
-   * keyid: required, your Amazon AWS Key ID
-   * secret: required, your Amazon Secret Key
-   * secure: optional, default=false, if true, use HTTPS
-   * consistent: optional, default=true, if true, ask for consistent reads
-   * test: optional, default=false, if true, don't actually send anything to SimpleDB
-   * host: optional, default=sdb.amazon.com, SimpleDB host
-   * path: optional, default=/, SimpleDB path
-   * version, optional, default=2009-04-15, SimpleDB API version
-   * maxtry: optional, default=4, maximum number of retries when SimpleDB fails
-   * delaymin: optional, default=0, minimum delay in milliseconds
-   * delayscale: optional, default=100, delay multiplier, in milliseconds
-   * randomdelay: optional, default=true, apply a random delay multiplier between 0 and 1
-   * expbase: optional, default=4, exponent base, for the formula that calculates delay time when SimpleDB fails
+   * _keyid_: (required), your Amazon AWS Key ID
+   * _secret_: (required), your Amazon Secret Key
 
-logger: optional
+For further options, see the section on options below
+
+
+_logger_: optional
 
   See the section on logging below
 
 
 ### sdb.createDomain(domain,override,callback)
 
-Create a domain. Like a SQL table, sort of.
+Create a domain. A domain is like a SQL table, sort of.
 
     sdb.createDomain('<domain>',function(err,res,meta){
       if( !err ) {
@@ -168,7 +174,7 @@ Create a domain. Like a SQL table, sort of.
       }
     }
 
-Where <domain> is the name of your domain.
+Where `<domain>` is the name of your domain.
 
 
 
@@ -360,6 +366,24 @@ The parameters are:
    * response: result from SimpleDB
    * stop: stop(true|false), function to stop retries in case of errors
    * callback: action-specific callback, as provided by functions like getItem, putItem, etc.
+
+
+## Options
+
+The additional options that can be given to _simpledb.SimpleDB_ are:
+
+   * _secure_: (optional, default=false), if true, use HTTPS
+   * _consistent_: (optional, default=true), if true, ask for consistent reads
+   * _test_: (optional, default=false), if true, don't actually send anything to SimpleDB
+   * _host_: (optional, default=sdb.amazon.com), SimpleDB host
+   * _path_: (optional, default=/), SimpleDB path
+   * _version, optional), default=2009-04-15, SimpleDB API version
+   * _maxtry__: (optional, default=4), maximum number of retries when SimpleDB fails
+   * _delaymin_: (optional, default=0), minimum delay in milliseconds
+   * _delayscale_: (optional, default=100), delay multiplier, in milliseconds
+   * _randomdelay_: (optional, default=true), apply a random delay multiplier between 0 and 1
+   * _expbase_: (optional, default=4), exponent base, for the formula that calculates delay time when SimpleDB fails
+
 
 ## Logging
 
