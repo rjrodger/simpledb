@@ -380,8 +380,8 @@ The additional options that can be given to _simpledb.SimpleDB_ are:
    * _test_: (optional, default=false), if true, don't actually send anything to SimpleDB
    * _host_: (optional, default=sdb.amazon.com), SimpleDB host
    * _path_: (optional, default=/), SimpleDB path
-   * _version, optional), default=2009-04-15, SimpleDB API version
-   * _maxtry__: (optional, default=4), maximum number of retries when SimpleDB fails
+   * _version_: optional), default=2009-04-15, SimpleDB API version
+   * _maxtry_: (optional, default=4), maximum number of retries when SimpleDB fails
    * _delaymin_: (optional, default=0), minimum delay in milliseconds
    * _delayscale_: (optional, default=100), delay multiplier, in milliseconds
    * _randomdelay_: (optional, default=true), apply a random delay multiplier between 0 and 1
@@ -390,9 +390,9 @@ The additional options that can be given to _simpledb.SimpleDB_ are:
 
 ## Logging
 
-Provide a logger callback when you are creating the simpledb.SimpleDB
+You can provide a logger callback when you are creating the _simpledb.SimpleDB_
 object to get notifications of request processing events. A simple logger that
-prints to STDOUT is provided by simpledb.debuglogger:
+prints to STDOUT is provided by _simpledb.debuglogger_:
 
     var sdb = new simpledb.SimpleDB( {...}, simpledb.debuglogger )
 
@@ -400,46 +400,46 @@ The logger callback accepts the following arguments:
     logger( type, date, ... )
 
    * _type_: string, one of _create_, _request_, _handle_, _error_, _status_
-   * date: a Date object
+   * _date_: a Date object
    * ...: remaining arguments depend on type
 
-For type=create, fired when the simpledb.SimpleDB object is created, the arguments are:
+For _type=create_, fired when the simpledb.SimpleDB object is created, the arguments are:
 
-   * opts: options object
-   * awsopts: aws-lib options
+   * _opts_: options object
+   * _awsopts_: aws-lib options
 
-For type=request, fired just before a request is made to SimpleDB, the arguments are:
+For _type=request_, fired just before a request is made to SimpleDB, the arguments are:
 
-   * start: Date object, start time of request
-   * action: string, name of SimpleDB action
-   * query: full SimpleDB query
+   * _start_: Date object, start time of request
+   * _action_: string, name of SimpleDB action
+   * _query_: full SimpleDB query
 
-For type=handle, fired after each response from SimpleDB, the arguments are:
+For _type=handle_, fired after each response from SimpleDB, the arguments are:
 
-   * start: Date object, start time of request
-   * action: string, name of SimpleDB action
-   * query: full SimpleDB query
-   * tryIndex: number of tries attempted, up to maxtry 
-   * response: result from SimpleDB
+   * _start_: Date object, start time of request
+   * _action_: string, name of SimpleDB action
+   * _query_: full SimpleDB query
+   * _tryIndex_: number of tries attempted, up to maxtry 
+   * _response_: result from SimpleDB
 
-For type=error, fired after any response with an error, the arguments are:
+For _type=error_, fired after any response with an error, the arguments are:
 
-   * err: the error that occurred, an object like {Code:'...',Message:'...'}, where _Code_ is the Amazon error code
-   * res: the result
-   * meta: the request meta data
+   * _err_: the error that occurred, an object like {Code:'...',Message:'...'}, where _Code_ is the Amazon error code
+   * _res_: the result
+   * _meta_: the request meta data
 
-For type=status, fired after each retry, the arguments are:
+For _type=status_, fired after each retry, the arguments are:
 
-   * done: true if request has finally succeeded
-   * tryIndex: count of attempts
-   * last: true if this was the last attempt
-   * delay: delay in milliseconds until this attempt
-   * err: any error that occurred
+   * _done_: true if request has finally succeeded
+   * _tryIndex_: count of attempts
+   * _last_: true if this was the last attempt
+   * _delay_: delay in milliseconds until this attempt
+   * _err_: any error that occurred
 
 
 ## Testing
 
-The unit tests use expresso: [https://github.com/visionmedia/expresso]
+The unit tests use expresso: https://github.com/visionmedia/expresso
 
     npm install expresso
     npm install eyes
