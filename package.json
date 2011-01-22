@@ -1,6 +1,6 @@
 {
   "name": "simpledb",
-  "description": "A SimpleDB library for Node.js that is user-friendly and fault-tolerant",
+  "description": "An Amazon AWS SimpleDB library for Node.js that is user-friendly and fault-tolerant",
   "keywords": ['amazon','aws','simpledb','database','wrapper','api'],
   "version": "0.0.1",
   "homepage": "https://github.com/rjrodger/simpledb",
