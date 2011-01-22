@@ -7,7 +7,7 @@ var eyes = require('eyes')
 
 var simpledb = require('../lib/simpledb.js')
 
-var keys = require('./keys.mine.js')
+var keys = require('./keys.js')
 
 
 module.exports = {
