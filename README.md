@@ -12,7 +12,7 @@
 
 ## node-simpledb
 
-A user-friendly library for Amazon AWS SimpleDB access. The core
+A user-friendly **fault-tolerant** library for Amazon AWS SimpleDB access. The core
 SimpleDB actions are mapped to functions:
 
     var simpledb = require('node-simpledb')
@@ -29,9 +29,9 @@ SimpleDB actions are mapped to functions:
       })
     })
 
-Any given SimpleDB request has a non-trivial chance of failing. This
+**Any given SimpleDB request has a non-trivial chance of failing. This
 library implements the exponential back-off retry algorithm as
-recommended in the SimpleDB developer guide
+recommended in the SimpleDB developer guide.**
 
 This library depends on the excellent aws-lib module: https://github.com/mirkok/aws-lib
 
@@ -45,15 +45,15 @@ Key Features:
 
 Core Functions:
 
-   * createDomain   (_'CreateDomain'_)
-   * domainMetadata (_'DomainMetadata'_)
-   * listDomains    (_'ListDomains'_)
-   * deleteDomain   (_'DeleteDomain'_)
-   * putItem        (_'PutAttributes'_)
-   * batchPutItem   (_'BatchPutAttributes'_)
-   * getItem        (_'GetAttributes'_)
-   * deleteItem     (_'DeleteAttributes'_)
-   * select         (_'Select'_)
+   * createDomain   (_"CreateDomain"_)
+   * domainMetadata (_"DomainMetadata"_)
+   * listDomains    (_"ListDomains"_)
+   * deleteDomain   (_"DeleteDomain"_)
+   * putItem        (_"PutAttributes"_)
+   * batchPutItem   (_"BatchPutAttributes"_)
+   * getItem        (_"GetAttributes"_)
+   * deleteItem     (_"DeleteAttributes"_)
+   * select         (_"Select"_)
    * request        (any action)
 
 This is version 0.0.1 so there's probably still some wierdness - use at your risk.
@@ -140,7 +140,7 @@ argument. You can use an override on any of the SimpleDB action wrapper function
 
     sdb.getItem('domain','itemname', {ConsistentRead:'false'} ,function(err,res,meta){ ... })
 
-In the above code, _{ConsistentRead:"false"}_ is the optional override argument.
+In the above code, `{ConsistentRead:"false"}` is the optional override argument.
 
 
 ### simpledb.SimpleDB
@@ -180,21 +180,21 @@ Where `<domain>` is the name of your domain.
 
 ### sdb.domainMetadata(domain,override,callback)
 
-Get some statistics about your domain, such as a count of items and how much storage it is using (you pay for this!).
+Get some statistics about your domain, such as a count of items and how much storage it is using (you pay Amazon for this!).
 
     sdb.domainMetadata('<domain>',function(err,res,meta){
        console.log('Mmm, floor pie! '+JSON.stringify(res) )
     }
 
-Where <domain> is the name of your domain.
+Where `<domain>` is the name of your domain.
 
 
 
 ### sdb.listDomains(override,callback)
 
 Returns a list of your domain names as an array of strings. Restricted
-to the specificed SimpleDB host (default=sdb.amazonaws.com). See the
-simpledbSimppleDB options to change this.
+to the specified SimpleDB host (default=sdb.amazonaws.com). See the
+_simpledb.SimpleDB_ options to change this.
 
     sdb.listDomains(function(err,res,meta){
        console.log('You hear that? That's market bacon hitting the pan: '+JSON.stringify(res) )
@@ -212,7 +212,7 @@ Delete a domain. Cannot be undone!
       }
     }
 
-Where <domain> is the name of your domain.
+Where `<domain>` is the name of your domain.
 
 
 ### sdb.putItem(domain,itemname,attributes,override,callback)
@@ -228,8 +228,8 @@ Store an item in SimpleDB.
         console.log("Memories, you're talking about memories: "+JSON.stringify(res)) 
       })
 
-Where <itemname> is the unique name of your item, and
-<attr>:"<value>" are the attr-value pairs for your item. The value
+Where `<itemname>` is the unique name of your item, and
+`<attr>:"<value>"` are the attribute-value pairs for your item. The value
 must be either a string or an array of strings.
 
 If you want to use conditional puts, you'll need to add some override values:
@@ -251,9 +251,9 @@ If you want to use conditional puts, you'll need to add some override values:
 
 ### sdb.batchPutItem( domain, items, override, callback )
 
-Store multiple items in the same request. More efficient. The _items_
+Store multiple items in the same request. This is more efficient. The _items_
 argument is an array of item objects. Each item object must have a
-$ItemName meta attribute that specifies the name of the item.
+_$ItemName_ meta-attribute that specifies the name of the item.
 
     sdb.batchPutItem('<domain>',
       [ 
@@ -265,27 +265,27 @@ $ItemName meta attribute that specifies the name of the item.
 
 
 
-### sdb.getItem( domain, itemname, override, callback )
+### `sdb.getItem( domain, itemname, override, callback )`
 
 Get an item from SimpleDB using the item's unique name. The values of
-the item's attributes are returned as strings.  You can provide a
-$AsArrays meta directive in the override argument. When true, all
-attribute values are returned as arrays. The reason for this is that as
+the item's attributes are returned as strings.  You can provide an
+_$AsArrays_ meta-directive in the _override_ argument. When _true_, all
+attribute values are returned as arrays. As
 SimpleDb is schemaless, it is not possible to know in advance if an attribute
- is multi-valued. In the default case, ($AsArrays:false),
+ is multi-valued. In the default case, `{$AsArrays:false}`,
 multiple values are returned as string, with the value list comma-separated.
 
-    sdb.getItem('<domain>','<itemname>',function(err,res,meta){
+    sdb.getItem('<domain>','<itemname>',function( error , result, meta ){
       console.log("Those are good burgers, Walter: "+JSON.stringify(res)) 
     })
 
-    sdb.getItem('<domain>','<itemname>',{$AsArrays:true},function(err,res,meta){
+    sdb.getItem('<domain>','<itemname>',{$AsArrays:true},function( error, result, meta ){
       console.log("I've been watching television so much the shows are starting to run together: "+JSON.stringify(res)) 
     })
 
-By default, node-simpledb uses consistent reads. For improved
+By default, _node-simpledb_ uses consistent reads. For improved
 performance, if this is suitable for your application, you can set the _consistent_ option to _false_ when creating
-_simpledb.SimpleDB_. Or you can set it on a case-by-case basis, using an override: {ConsistentRead:'false'}
+_simpledb.SimpleDB_. Or you can set it on a case-by-case basis, using an override: `{ConsistentRead:"false"}`
 
 
 
@@ -297,11 +297,11 @@ removed. If present, only the specified attributes are removed. If all
 the attributes of an item are removed, then it will also be completely
 deleted.
 
-    sdb.deleteItem('<domain>','<itemname>',function(err,res,meta){
+    sdb.deleteItem('<domain>','<itemname>',function( error, result, meta ){
       console.log("Well, Ted, like I said the last time: it won't happen again: "+JSON.stringify(res)) 
     })
 
-    sdb.deleteItem('<domain>','<itemname>',[ '<attr>', ... ]function(err,res,meta){
+    sdb.deleteItem('<domain>','<itemname>',[ '<attr>', ... ]function( error, result, meta ){
       console.log("I felt like destroying something beautiful. "+JSON.stringify(res)) 
     })
 
@@ -313,42 +313,44 @@ almost-but-not-quite SQL. You should read the Amazon documentation:
 http://docs.amazonwebservices.com/AmazonSimpleDB/latest/DeveloperGuide/UsingSelect.html
 
 The results are returned as an array of items. Each item contains
-$ItemName meta attribute providing you with the name of the item.
+an _$ItemName_ meta-attribute providing you with the name of the item.
 
 If you need to handle _NextToken_ you'll need to do this manually with
 the override argument. You can get the _NextToken_ from the _meta_ parameter to your callback.
 
-    sdb.select("select * from <domain> where <attribute> = '<value>'",function(err,res,meta){
+    sdb.select("select * from <domain> where <attribute> = '<value>'",function( error, result, meta ){
       console.log("I'll get you, my pretty, and your little dog too! "+JSON.stringify(res)) 
     })
 
 
 ### sdb.request
 
-Make a direct request to SimpleDB. You're on your own: http://docs.amazonwebservices.com/AmazonSimpleDB/latest/DeveloperGuide/
-This is not a SimpleDB action wrapper. Use it when the wrapper functions have painted themselves into a corner.
+Make a direct request to SimpleDB. You're on your own! Again, read http://docs.amazonwebservices.com/AmazonSimpleDB/latest/DeveloperGuide/
+Unlike the other functions above, the _request_ function is not a SimpleDB action wrapper. Use it when the wrapper functions have painted themselves into a corner.
 
     sdb.request("<action>", 
       {
         <attribute>:"<value>",
         ...
       },
-      function(err,res,meta){
+      function( error, result, meta ){
         console.log("Gotta keep 'em separated: "+JSON.stringify(res)) 
       })
 
-Where <action> is the SimpleDB action, such as _GetItem_, and <attribute>:"<value>" are the SimpleDB request attribute pairs.
+Where `<action>` is the SimpleDB action, such as _GetItem_, and `<attribute>:"<value>"` are the SimpleDB REST request attribute pairs.
 
 ### sdb.client
 
-The aws-lib client object. Use this to send raw requests. Go hardcore.
+The `aws-lib` client object. Use this to send raw requests. Go hardcore.
 
 
 ### sdb.handle
 
 Replace this with your own implementation to change the handling of
-SimpleDB response. Most useful is to modify the response in some way
-and then call this function. Also good for testing.
+SimpleDB responses. Most useful is to modify the response in some way
+and then call the original function. Also good for testing.
+
+This example counts the number of requests made:
 
     var resultcount = 0    
 
@@ -359,13 +361,14 @@ and then call this function. Also good for testing.
     }
 
 The parameters are:
-   * start: Date object, start time of request
-   * action: string, name of SimpleDB action
-   * query: full SimpleDB query
-   * tryIndex: number of tries attempted, up to maxtry 
-   * response: result from SimpleDB
-   * stop: stop(true|false), function to stop retries in case of errors
-   * callback: action-specific callback, as provided by functions like getItem, putItem, etc.
+
+   * _start_: Date object, start time of request
+   * _action_: string, name of SimpleDB action
+   * _query_: full SimpleDB query
+   * _tryIndex_: number of tries attempted, up to maxtry 
+   * _response_: result from SimpleDB
+   * _stop_: stop(true|false), function to stop retries in case of errors
+   * _callback_: action-specific callback, as provided by functions like getItem, putItem, etc.
 
 
 ## Options
