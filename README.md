@@ -1,21 +1,22 @@
 
-!! NOT YET AVAILABLE VIA NPM !!
+!! AWAITING NPM DEPENDENCY UPDATE !!
 
-## PRE-RELEASE INSTALL
+## CURRENT INSTALL
 
-    git clone git://github.com/rjrodger/node-simpledb.git
-    npm install node-simpledb/
+The latest version of aws-lib is required. npmjs.org will get the new version of aws-lib in a few days. In the meantime:
 
-    git clone git://github.com/mirkok/aws-lib.git
+    npm install simpledb
+
+    git clone git://github.com/rjrodger/aws-lib.git
     npm install aws-lib/
 
 
-## node-simpledb
+## simpledb
 
 A user-friendly **fault-tolerant** library for Amazon AWS SimpleDB access. The core
 SimpleDB actions are mapped to functions:
 
-    var simpledb = require('node-simpledb')
+    var simpledb = require('simpledb')
     var sdb      = new simpledb.SimpleDB({keyid:'YOUR_AWS_KEY_ID',secret:'YOUR_AWS_SECRET_KEY'})
 
     sdb.createDomain( 'yourdomain', function( error ) {
@@ -62,14 +63,14 @@ Secure connections are not supported on node 0.3.x.
 
 ## Installation
 
-    npm install node-simpledb
+    npm install simpledb
 
 And in your code:
 
-    var simpledb = require('node-simpledb')
+    var simpledb = require('simpledb')
 
 Or clone the git repository:
-    git clone git://github.com/rjrodger/node-simpledb.git
+    git clone git://github.com/rjrodger/simpledb.git
 
 
 ## Usage
@@ -123,7 +124,7 @@ but... yeah. No X.509 for you. Yet.
 
 For the API examples, assume the following lines of code at the top of your source code file:
 
-    var simpledb = require('node-simpledb')
+    var simpledb = require('simpledb')
 
     var sdb = new simpledb.SimpleDB(
       {keyid:'YOUR_AWS_KEY_ID',secret:'YOUR_AWS_SECRET_KEY'},
@@ -283,7 +284,7 @@ multiple values are returned as string, with the value list comma-separated.
       console.log("I've been watching television so much the shows are starting to run together: "+JSON.stringify(res)) 
     })
 
-By default, _node-simpledb_ uses consistent reads. For improved
+By default, _simpledb_ uses consistent reads. For improved
 performance, if this is suitable for your application, you can set the _consistent_ option to _false_ when creating
 _simpledb.SimpleDB_. Or you can set it on a case-by-case basis, using an override: `{ConsistentRead:"false"}`
 
