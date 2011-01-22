@@ -452,7 +452,7 @@ The tests are in test/simpledb.test.js
 
 Here's some more information on SimpleDB:
 
-[](http://docs.amazonwebservices.com/AmazonSimpleDB/latest/DeveloperGuide/ "Amazon AWS SimpleDB Developer Guide")
+[Amazon AWS SimpleDB Developer Guide](http://docs.amazonwebservices.com/AmazonSimpleDB/latest/DeveloperGuide/)
 
 ![](http://chartaca.com/point/adb6995d-b4b3-4edf-8892-a6d1a232483d/s.gif)
-[](http://chartaca.com/adb6995d-b4b3-4edf-8892-a6d1a232483d "Chartaca Hit Chart") 
+[Chartaca Hit Chart](http://chartaca.com/adb6995d-b4b3-4edf-8892-a6d1a232483d) 
