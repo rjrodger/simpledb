@@ -217,6 +217,11 @@ module.exports = {
       debugres(err,res,meta)
       assert.isNull(err)
 
+    ;sdb.getItem('simpledbtest','not-an-item',function(err,res,meta){
+      debugres(err,res,meta)
+      assert.isNull(err)
+      assert.isNull(res)
+
     ;sdb.getItem('simpledbtest','item1',function(err,res,meta){
       debugres(err,res,meta)
       assert.isNull(err)
@@ -284,7 +289,7 @@ module.exports = {
       debugres(err,res,meta)
       assert.isNotNull(err)
 
-    }) }) }) }) }) }) }) }) }) }) }) }) })
+    }) }) }) }) }) }) }) }) }) }) }) }) }) })
   },
 
   example: function() {
