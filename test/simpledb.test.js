@@ -14,8 +14,8 @@ module.exports = {
   expbackoff: function() {
 
     var action_calls = []
-    function action(stop,tryI,delay) {
-      action_calls.push(tryI+':'+delay)
+    function action(stop,tryI,last,delay) {
+      action_calls.push(tryI+':'+last+':'+delay)
       stop(2 < tryI)
     }
 
@@ -58,26 +58,28 @@ module.exports = {
       status_calls_expect = s
     }
 
+    // NOTE: assertions errors are appended to expectation arrays by statuscb above
+
     var testI = 0
     var tests = [
 
       // happy path
       function() {
-        expect( [ '1:0', '2:20', '3:40' ],
+        expect( [ '1:false:0', '2:false:20', '3:false:40' ],
                 [ 'false:1:false:0:null', 'false:2:false:20:null', 'true:3:true:40:null' ] )
         simpledb.expbackoff(action,status,4,2,0,10,false)
       },
 
       // maxtry ends it
       function() {
-        expect( [ '1:0', '2:20' ],
+        expect( [ '1:false:0', '2:true:20' ],
                 [ 'false:1:false:0:null', 'false:2:true:20:null' ] )
         simpledb.expbackoff(action,status,2,2,0,10,false)
       },
 
       // exponent base
       function() {
-        expect( [ '1:0', '2:40', '3:160' ],
+        expect( [ '1:false:0', '2:false:40', '3:false:160' ],
                 [ 'false:1:false:0:null', 'false:2:false:40:null', 'true:3:true:160:null' ] )
         simpledb.expbackoff(action,status,4,4,0,10,false)
       },
@@ -93,6 +95,7 @@ module.exports = {
         expect( 3,3 )
         simpledb.expbackoff(action,status)
       },
+
     ]
 
     tests[testI]()
@@ -163,18 +166,31 @@ module.exports = {
     // overrides
     sdb = new simpledb.SimpleDB({keyid:'foo',secret:'bar'},simpledb.debuglogger)
 
-    sdb.handle = function(op,q,start,tryI,res,stop,callback){ assert.ok(!q.ConsistentRead) }
+    sdb.handle = function(op,q,start,tryI,last,res,stop,callback){ assert.ok(!q.ConsistentRead) }
     sdb.getItem('domain','itemname',function(){
 
-      sdb.handle = function(op,q,start,tryI,res,stop,callback){ assert.equal('false',q.ConsistentRead) }
+      sdb.handle = function(op,q,start,tryI,last,res,stop,callback){ assert.equal('false',q.ConsistentRead) }
       sdb.getItem('domain','itemname',{ConsistentRead:'false'},function(){})
     })
 
+
+    // errors
+    sdb = new simpledb.SimpleDB({keyid:'foo',secret:'bar'},simpledb.debuglogger)
+    sdb.getItem('domain','itemname',function(err,res,meta){
+      eyes.inspect(err)
+      eyes.inspect(meta)
+      assert.isNotNull(err)
+      assert.equal('InvalidClientTokenId',err.Code)
+      assert.equal(1, meta.trycount) // do not retry client errors
+    })
+
+
+    // the real deal
     sdb = new simpledb.SimpleDB({keyid:keys.id,secret:keys.secret},simpledb.debuglogger)
     //eyes.inspect(sdb)
 
     var orighandle = sdb.handle
-    var againhandle = function(op,q,start,tryI,res,stop,callback){
+    var againhandle = function(op,q,start,tryI,last,res,stop,callback){
       if( 1 == tryI ) {
         res = {
           Errors:{
@@ -186,7 +202,7 @@ module.exports = {
           RequestID:'81abaa80-7309-e39e-2644-b33b2c3acb57'
         }
       }
-      orighandle(op,q,start,tryI,res,stop,callback)
+      orighandle(op,q,start,tryI,last,res,stop,callback)
     }
 
 
@@ -206,13 +222,16 @@ module.exports = {
       assert.ok( 2 <= meta.trycount )
       assert.ok( Array.isArray(res) )
       assert.ok( 1 <= res.length )
+      assert.equal(2, meta.trycount) // retry server errors
+
       sdb.handle = orighandle
       
     ;sdb.putItem('simpledbtest','item1',
       {
         foo:1,
         bar:'BAR',
-        woz:['one','two']
+        woz:['one','two'],
+        quote:"'n"
       },function(err,res,meta){
       debugres(err,res,meta)
       assert.isNull(err)
@@ -229,6 +248,7 @@ module.exports = {
       assert.equal(1,parseInt(res.foo,10))
       assert.equal('BAR',res.bar)
       assert.equal('one,two',res.woz)
+      assert.equal("'n",res.quote)
 
     ;sdb.getItem('simpledbtest','item1',{$AsArrays:true},function(err,res,meta){
       debugres(err,res,meta)
@@ -238,17 +258,39 @@ module.exports = {
       assert.equal('BAR',res.bar[0])
       assert.equal('one',res.woz[0])
       assert.equal('two',res.woz[1])
+      assert.equal("'n",res.quote[0])
 
     ;sdb.request("GetAttributes", 
       {
         DomainName:'simpledbtest',
         ItemName:'item1',
+        ConsistentRead:'true'
       },
       function(err,res,meta){
         debugres(err,res,meta)
         assert.isNull(err)
+        assert.equal( 5, res.GetAttributesResult.Attribute.length )
+        
+    ;sdb.select("not a select expression at all at all",function(err,res,meta){
+      debugres(err,res,meta)
+      assert.isNotNull(err)
+      assert.equal( 'InvalidQueryExpression', err.Code )
 
     ;sdb.select("select * from simpledbtest where bar = 'BAR'",function(err,res,meta){
+      debugres(err,res,meta)
+      assert.isNull(err)
+      assert.ok( 1 == res.length )
+      assert.equal('item1',res[0].$ItemName)
+      assert.equal( 'BAR', res[0].bar )
+
+    ;sdb.select("select * from simpledbtest where bar = '?'",['BAR'],function(err,res,meta){
+      debugres(err,res,meta)
+      assert.isNull(err)
+      assert.ok( 1 == res.length )
+      assert.equal('item1',res[0].$ItemName)
+      assert.equal( 'BAR', res[0].bar )
+
+    ;sdb.select("select * from simpledbtest where bar = '?' and quote = '?'",['BAR',"'n"],function(err,res,meta){
       debugres(err,res,meta)
       assert.isNull(err)
       assert.ok( 1 == res.length )
@@ -289,7 +331,7 @@ module.exports = {
       debugres(err,res,meta)
       assert.isNotNull(err)
 
-    }) }) }) }) }) }) }) }) }) }) }) }) }) })
+    }) }) }) }) }) }) }) }) }) }) }) }) }) }) }) }) })
   },
 
   example: function() {
