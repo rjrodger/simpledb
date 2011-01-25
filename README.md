@@ -1,16 +1,4 @@
-!! AWAITING NPM DEPENDENCY UPDATE !!
-
-## CURRENT INSTALL
-
-The latest version of aws-lib is required. npmjs.org will get the new version of aws-lib in a few days. In the meantime:
-
-    npm install simpledb
-
-    git clone git://github.com/rjrodger/aws-lib.git
-    npm install aws-lib/
-
-
-## simpledb
+# simpledb
 
 Current Version: 0.0.2
 
