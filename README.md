@@ -61,7 +61,7 @@ And in your code:
 Or clone the git repository:
     git clone git://github.com/rjrodger/simpledb.git
 
-The simpledb module depends on the [aws-lib](https://github.com/mirkok/aws-lib) module.
+The simpledb module depends on the [aws-lib](https://github.com/mirkok/aws-lib) module. npm will install this automatically.
 
 
 ## Usage
