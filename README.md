@@ -136,7 +136,7 @@ argument. You can use an override on any of the SimpleDB action wrapper function
 In the above code, `{ConsistentRead:"false"}` is the optional override argument.
 
 
-### simpledb.SimpleDB( options, logger )
+### simpledb.SimpleDB: `simpledb.SimpleDB( options, logger )`
 
   * _options_: (required) set of options; _keyid_ and _secret_ are required
   * _logger_: (optional) callback for log events
@@ -160,7 +160,7 @@ _logger_: optional
   See the section on logging below
 
 
-### `sdb.createDomain(domain,override,callback)`
+### createDomain: `sdb.createDomain(domain,override,callback)`
 
   * _domain_: (required) the name of the domain
   * _override_: (optional) SimpleDB attributes to override function defaults
@@ -178,7 +178,7 @@ Where `<domain>` is the name of your domain.
 
 
 
-### `sdb.domainMetadata(domain,override,callback)`
+### domainMetadata: `sdb.domainMetadata(domain,override,callback)`
 
   * _domain_: (required) the name of the domain
   * _override_: (optional) SimpleDB attributes to override function defaults
@@ -194,7 +194,7 @@ Where `<domain>` is the name of your domain.
 
 
 
-### `sdb.listDomains(override,callback)`
+### listDomains: `sdb.listDomains(override,callback)`
 
   * _override_: (optional) SimpleDB attributes to override function defaults
   * _callback_: (required) callback function accepting parameters _callback(error, result, metadata)_
@@ -209,7 +209,7 @@ _simpledb.SimpleDB_ options to change this.
 
 
 
-### `sdb.deleteDomain(domain,override,callback)`
+### sdb.deleteDomain: `sdb.deleteDomain(domain,override,callback)`
 
   * _domain_: (required) the name of the domain
   * _override_: (optional) SimpleDB attributes to override function defaults
@@ -226,7 +226,7 @@ Delete a domain. Cannot be undone!
 Where `<domain>` is the name of your domain.
 
 
-### `sdb.putItem(domain,itemname,attrs,override,callback)`
+### sdb.putItem: `sdb.putItem(domain,itemname,attrs,override,callback)`
 
   * _domain_: (required) the name of the domain
   * _itemname_: (required) the unique name of the item in the domain
@@ -266,7 +266,7 @@ If you want to use conditional puts, you'll need to add some override values:
       })
 
 
-### `sdb.batchPutItem( domain, items, override, callback )`
+### sdb.batchPutItem: `sdb.batchPutItem( domain, items, override, callback )`
 
   * _domain_: (required) the name of the domain
   * _items_: (required) the list of items to store
@@ -287,7 +287,7 @@ _$ItemName_ meta-attribute that specifies the name of the item.
 
 
 
-### `sdb.getItem( domain, itemname, override, callback )`
+### sdb.getItem: `sdb.getItem( domain, itemname, override, callback )`
 
   * _domain_: (required) the name of the domain
   * _itemname_: (required) the unique name of the item in the domain
@@ -316,7 +316,7 @@ _simpledb.SimpleDB_. Or you can set it on a case-by-case basis, using an overrid
 
 
 
-### `deleteItem( domain, itemname, attrs, override, callback )`
+### deleteItem: `sdb.deleteItem( domain, itemname, attrs, override, callback )`
 
   * _domain_: (required) the name of the domain
   * _itemname_: (required) the unique name of the item in the domain
@@ -339,7 +339,7 @@ deleted.
     })
 
 
-### `select( query, override, callback )`
+### select: `sdb.select( query, override, callback )`
 
   * _query_: (required) SimpleDB select expression
   * _override_: (optional) SimpleDB attributes to override function defaults
@@ -360,7 +360,7 @@ the override argument. You can get the _NextToken_ from the _meta_ parameter to 
     })
 
 
-### `sdb.request( action, attrs, callback )`
+### request: `sdb.request( action, attrs, callback )`
 
   * _action_: (required) SimpleDB action
   * _attrs_: (required) SimpleDB request attributes
@@ -382,12 +382,12 @@ Unlike the other functions above, the _request_ function is not a SimpleDB actio
 Where `<action>` is the SimpleDB action, such as _GetItem_, and `<attribute>:"<value>"` are the SimpleDB REST request attribute pairs.
 
 
-### sdb.client
+### client: `sdb.client`
 
 The `aws-lib` client object. Use this to send raw requests. Go hardcore.
 
 
-### sdb.handle( start, action, query, tryIndex, last, response, stop, callback, )
+### handle: `sdb.handle( start, action, query, tryIndex, last, response, stop, callback, )`
 
    * _start_: Date object, start time of request
    * _action_: string, name of SimpleDB action
