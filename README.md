@@ -12,6 +12,8 @@ The latest version of aws-lib is required. npmjs.org will get the new version of
 
 ## simpledb
 
+Current Version: 0.0.2
+
 A user-friendly **fault-tolerant** library for Amazon AWS SimpleDB access. The core
 SimpleDB actions are mapped to functions:
 
@@ -33,7 +35,7 @@ SimpleDB actions are mapped to functions:
 library implements the exponential back-off retry algorithm as
 recommended in the SimpleDB developer guide.**
 
-This library depends on the excellent aws-lib module: https://github.com/mirkok/aws-lib
+This library depends on the excellent aws-lib module: [aws-lib](https://github.com/mirkok/aws-lib)
 
 Key Features:
 
@@ -70,6 +72,8 @@ And in your code:
 
 Or clone the git repository:
     git clone git://github.com/rjrodger/simpledb.git
+
+The simpledb module depends on the [aws-lib](https://github.com/mirkok/aws-lib) module.
 
 
 ## Usage
@@ -132,7 +136,8 @@ For the API examples, assume the following lines of code at the top of your sour
 
 This gives you the standard wrapper, with a basic debugger that prints to STDOUT.
 
-You should really also read the Amazon SimpleDB documentation so that you understand how SimpleDB works: http://docs.amazonwebservices.com/AmazonSimpleDB/latest/DeveloperGuide/
+You should really also read the Amazon SimpleDB documentation so that you understand how SimpleDB works: 
+[Amazon SimpleDB Developer Guide](http://docs.amazonwebservices.com/AmazonSimpleDB/latest/DeveloperGuide/)
 
 As a get-out-of-jail, you can provide request attribute overrides. You
 supply these in an optional _override_ argument just before the callback
@@ -143,7 +148,10 @@ argument. You can use an override on any of the SimpleDB action wrapper function
 In the above code, `{ConsistentRead:"false"}` is the optional override argument.
 
 
-### simpledb.SimpleDB
+### simpledb.SimpleDB( options, logger )
+
+  * _options_: (required) set of options; _keyid_ and _secret_ are required
+  * _logger_: (optional) callback for log events
 
     var sdb = new simpledb.SimpleDB( options, logger )
 
@@ -164,7 +172,11 @@ _logger_: optional
   See the section on logging below
 
 
-### sdb.createDomain(domain,override,callback)
+### `sdb.createDomain(domain,override,callback)`
+
+  * _domain_: (required) the name of the domain
+  * _override_: (optional) SimpleDB attributes to override function defaults
+  * _callback_: (required) callback function accepting parameters _callback(error, result, metadata)_
 
 Create a domain. A domain is like a SQL table, sort of.
 
@@ -178,7 +190,11 @@ Where `<domain>` is the name of your domain.
 
 
 
-### sdb.domainMetadata(domain,override,callback)
+### `sdb.domainMetadata(domain,override,callback)`
+
+  * _domain_: (required) the name of the domain
+  * _override_: (optional) SimpleDB attributes to override function defaults
+  * _callback_: (required) callback function accepting parameters _callback(error, result, metadata)_
 
 Get some statistics about your domain, such as a count of items and how much storage it is using (you pay Amazon for this!).
 
@@ -190,7 +206,10 @@ Where `<domain>` is the name of your domain.
 
 
 
-### sdb.listDomains(override,callback)
+### `sdb.listDomains(override,callback)`
+
+  * _override_: (optional) SimpleDB attributes to override function defaults
+  * _callback_: (required) callback function accepting parameters _callback(error, result, metadata)_
 
 Returns a list of your domain names as an array of strings. Restricted
 to the specified SimpleDB host (default=sdb.amazonaws.com). See the
@@ -202,7 +221,11 @@ _simpledb.SimpleDB_ options to change this.
 
 
 
-### sdb.deleteDomain(domain,override,callback)
+### `sdb.deleteDomain(domain,override,callback)`
+
+  * _domain_: (required) the name of the domain
+  * _override_: (optional) SimpleDB attributes to override function defaults
+  * _callback_: (required) callback function accepting parameters _callback(error, result, metadata)_
 
 Delete a domain. Cannot be undone!
 
@@ -215,7 +238,13 @@ Delete a domain. Cannot be undone!
 Where `<domain>` is the name of your domain.
 
 
-### sdb.putItem(domain,itemname,attributes,override,callback)
+### `sdb.putItem(domain,itemname,attrs,override,callback)`
+
+  * _domain_: (required) the name of the domain
+  * _itemname_: (required) the unique name of the item in the domain
+  * _attrs_: (required) the item attributes to store
+  * _override_: (optional) SimpleDB attributes to override function defaults
+  * _callback_: (required) callback function accepting parameters _callback(error, result, metadata)_
 
 Store an item in SimpleDB.
 
@@ -249,7 +278,12 @@ If you want to use conditional puts, you'll need to add some override values:
       })
 
 
-### sdb.batchPutItem( domain, items, override, callback )
+### `sdb.batchPutItem( domain, items, override, callback )`
+
+  * _domain_: (required) the name of the domain
+  * _items_: (required) the list of items to store
+  * _override_: (optional) SimpleDB attributes to override function defaults
+  * _callback_: (required) callback function accepting parameters _callback(error, result, metadata)_
 
 Store multiple items in the same request. This is more efficient. The _items_
 argument is an array of item objects. Each item object must have a
@@ -266,6 +300,11 @@ _$ItemName_ meta-attribute that specifies the name of the item.
 
 
 ### `sdb.getItem( domain, itemname, override, callback )`
+
+  * _domain_: (required) the name of the domain
+  * _itemname_: (required) the unique name of the item in the domain
+  * _override_: (optional) SimpleDB attributes to override function defaults
+  * _callback_: (required) callback function accepting parameters _callback(error, result, metadata)_
 
 Get an item from SimpleDB using the item's unique name. The values of
 the item's attributes are returned as strings.  You can provide an
@@ -289,7 +328,13 @@ _simpledb.SimpleDB_. Or you can set it on a case-by-case basis, using an overrid
 
 
 
-### deleteItem( domain, itemname, attrs, override, callback )
+### `deleteItem( domain, itemname, attrs, override, callback )`
+
+  * _domain_: (required) the name of the domain
+  * _itemname_: (required) the unique name of the item in the domain
+  * _attrs_: (optional) the attributes to delete
+  * _override_: (optional) SimpleDB attributes to override function defaults
+  * _callback_: (required) callback function accepting parameters _callback(error, result, metadata)_
 
 Delete an item from SimpleDB. The _attrs_ argument is an optional
 array of attribute names. If not present, the item is completely
@@ -306,11 +351,15 @@ deleted.
     })
 
 
-### select( query, override, callback )
+### `select( query, override, callback )`
+
+  * _query_: (required) SimpleDB select expression
+  * _override_: (optional) SimpleDB attributes to override function defaults
+  * _callback_: (required) callback function accepting parameters _callback(error, result, metadata)_
 
 Perform a SELECT-style query on a SimpleDB domain. The syntax is
 almost-but-not-quite SQL. You should read the Amazon documentation:
-http://docs.amazonwebservices.com/AmazonSimpleDB/latest/DeveloperGuide/UsingSelect.html
+[Using Select](http://docs.amazonwebservices.com/AmazonSimpleDB/latest/DeveloperGuide/UsingSelect.html)
 
 The results are returned as an array of items. Each item contains
 an _$ItemName_ meta-attribute providing you with the name of the item.
@@ -323,9 +372,14 @@ the override argument. You can get the _NextToken_ from the _meta_ parameter to 
     })
 
 
-### sdb.request
+### `sdb.request( action, attrs, callback )`
 
-Make a direct request to SimpleDB. You're on your own! Again, read http://docs.amazonwebservices.com/AmazonSimpleDB/latest/DeveloperGuide/
+  * _action_: (required) SimpleDB action
+  * _attrs_: (required) SimpleDB request attributes
+  * _callback_: (required) callback function accepting parameters _callback(error, result, metadata)_
+
+Make a direct request to SimpleDB. You're on your own! Again, read 
+[Amazon SimpleDB Developer Guide](http://docs.amazonwebservices.com/AmazonSimpleDB/latest/DeveloperGuide/)
 Unlike the other functions above, the _request_ function is not a SimpleDB action wrapper. Use it when the wrapper functions have painted themselves into a corner.
 
     sdb.request("<action>", 
@@ -339,12 +393,22 @@ Unlike the other functions above, the _request_ function is not a SimpleDB actio
 
 Where `<action>` is the SimpleDB action, such as _GetItem_, and `<attribute>:"<value>"` are the SimpleDB REST request attribute pairs.
 
+
 ### sdb.client
 
 The `aws-lib` client object. Use this to send raw requests. Go hardcore.
 
 
-### sdb.handle
+### sdb.handle( start, action, query, tryIndex, last, response, stop, callback, )
+
+   * _start_: Date object, start time of request
+   * _action_: string, name of SimpleDB action
+   * _query_: full SimpleDB query
+   * _tryIndex_: number of tries attempted, up to maxtry 
+   * _last_: true if this is the last request that will be made
+   * _response_: result from SimpleDB
+   * _stop_: stop(true|false), function to stop retries in case of errors
+   * _callback_: action-specific callback, as provided by functions like getItem, putItem, etc.
 
 Replace this with your own implementation to change the handling of
 SimpleDB responses. Most useful is to modify the response in some way
@@ -355,20 +419,11 @@ This example counts the number of requests made:
     var resultcount = 0    
 
     var orighandle = sdb.handle
-    sdb.handle = function(start,action,query,tryIndex,response,stop,callback){
+    sdb.handle = function(start,action,query,tryIndex,last,response,stop,callback){
       res.$ResultCount = resultcount++
       orighandle(start,act,q,tryI,res,stop,callback)
     }
 
-The parameters are:
-
-   * _start_: Date object, start time of request
-   * _action_: string, name of SimpleDB action
-   * _query_: full SimpleDB query
-   * _tryIndex_: number of tries attempted, up to maxtry 
-   * _response_: result from SimpleDB
-   * _stop_: stop(true|false), function to stop retries in case of errors
-   * _callback_: action-specific callback, as provided by functions like getItem, putItem, etc.
 
 
 ## Options
@@ -420,10 +475,17 @@ For _type=handle_, fired after each response from SimpleDB, the arguments are:
    * _action_: string, name of SimpleDB action
    * _query_: full SimpleDB query
    * _tryIndex_: number of tries attempted, up to maxtry 
+   * _last_: true if this is the last request that will be made
    * _response_: result from SimpleDB
 
 For _type=error_, fired after any response with an error, the arguments are:
 
+   * _start_: Date object, start time of request
+   * _action_: string, name of SimpleDB action
+   * _query_: full SimpleDB query
+   * _tryIndex_: number of tries attempted, up to maxtry 
+   * _last_: true if this is the last request that will be made
+   * _retry_: true if a retry will be attempted
    * _err_: the error that occurred, an object like {Code:'...',Message:'...'}, where _Code_ is the Amazon error code
    * _res_: the result
    * _meta_: the request meta data
@@ -439,7 +501,7 @@ For _type=status_, fired after each retry, the arguments are:
 
 ## Testing
 
-The unit tests use expresso: https://github.com/visionmedia/expresso
+The unit tests use [expresso](https://github.com/visionmedia/expresso)
 
     npm install expresso
     npm install eyes
