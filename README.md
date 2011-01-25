@@ -46,7 +46,7 @@ Core Functions:
    * select         (_"Select"_)
    * request        (any action)
 
-This is version 0.0.1 so there's probably still some wierdness - use at your risk.
+This is still an early version so there's probably some wierdness - use at your risk.
 Secure connections are not supported on node 0.3.x.
 
 
