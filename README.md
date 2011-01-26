@@ -411,7 +411,7 @@ This example counts the number of requests made:
     var orighandle = sdb.handle
     sdb.handle = function(start,action,query,tryIndex,last,response,stop,callback){
       res.$ResultCount = resultcount++
-      orighandle(start,act,q,tryI,res,stop,callback)
+      orighandle(start,action,query,tryIndex,last,response,stop,callback)
     }
 
 
