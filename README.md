@@ -1,6 +1,6 @@
 # simpledb
 
-If you're using this library, feel free to contact on twitter with questions! :) [@rjrodger](http://twitter.com/rjrodger)
+If you're using this library, feel free to contact me on twitter if you have any questions! :) [@rjrodger](http://twitter.com/rjrodger)
 
 Current Version: 0.0.3
 
