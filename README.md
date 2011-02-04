@@ -1,5 +1,7 @@
 # simpledb
 
+If you're using this library, feel free to contact on twitter with questions! :) [@rjrodger](http://twitter.com/rjrodger)
+
 Current Version: 0.0.3
 
 Tested on: node 0.2.6 and 0.3.5
