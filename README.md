@@ -1,5 +1,7 @@
 # simpledb
 
+If you're using this library, feel free to contact me on twitter if you have any questions! :) [@rjrodger](http://twitter.com/rjrodger)
+
 Current Version: 0.0.3
 
 Tested on: node 0.2.6 and 0.3.5
@@ -211,7 +213,7 @@ _simpledb.SimpleDB_ options to change this.
 
 
 
-### sdb.deleteDomain: `sdb.deleteDomain(domain,override,callback)`
+### deleteDomain: `sdb.deleteDomain(domain,override,callback)`
 
   * _domain_: (required) the name of the domain
   * _override_: (optional) SimpleDB attributes to override function defaults
@@ -228,7 +230,7 @@ Delete a domain. Cannot be undone!
 Where `<domain>` is the name of your domain.
 
 
-### sdb.putItem: `sdb.putItem(domain,itemname,attrs,override,callback)`
+### putItem: `sdb.putItem(domain,itemname,attrs,override,callback)`
 
   * _domain_: (required) the name of the domain
   * _itemname_: (required) the unique name of the item in the domain
@@ -268,7 +270,7 @@ If you want to use conditional puts, you'll need to add some override values:
       })
 
 
-### sdb.batchPutItem: `sdb.batchPutItem( domain, items, override, callback )`
+### batchPutItem: `sdb.batchPutItem( domain, items, override, callback )`
 
   * _domain_: (required) the name of the domain
   * _items_: (required) the list of items to store
@@ -289,7 +291,7 @@ _$ItemName_ meta-attribute that specifies the name of the item.
 
 
 
-### sdb.getItem: `sdb.getItem( domain, itemname, override, callback )`
+### getItem: `sdb.getItem( domain, itemname, override, callback )`
 
   * _domain_: (required) the name of the domain
   * _itemname_: (required) the unique name of the item in the domain
@@ -411,7 +413,7 @@ This example counts the number of requests made:
     var orighandle = sdb.handle
     sdb.handle = function(start,action,query,tryIndex,last,response,stop,callback){
       res.$ResultCount = resultcount++
-      orighandle(start,act,q,tryI,res,stop,callback)
+      orighandle(start,action,query,tryIndex,last,response,stop,callback)
     }
 
 
