@@ -5,11 +5,11 @@
   "version": "0.0.4",
   "homepage": "https://github.com/rjrodger/simpledb",
   "author": "Richard Rodger <richard@ricebridge.com> (http://richardrodger.com/)",
-    "contributors": [
+  "contributors": [
     "Richard Rodger <richard@ricebridge.com> (http://richardrodger.com/)"
   ],
   "dependencies": {
-      "aws-lib": ">0.0.1",
+      "aws-lib": ">0.0.1"
   },
   "main": "lib/simpledb",
   "directories": {
