@@ -314,6 +314,31 @@ module.exports = {
       assert.equal('b2',res[1].$ItemName)
       assert.equal('two', res[1].field )
 
+	;sdb.deleteItem('simpledbtest','item1', {'woz': ['one']},function(err,res,meta) {
+      debugres(err,res,meta)
+
+    ;sdb.getItem('simpledbtest','item1',function(err,res,meta){
+      debugres(err,res,meta)
+      assert.isNull(err)
+      assert.equal('item1',res.$ItemName)
+      assert.equal(1,parseInt(res.foo,10))
+      assert.equal('BAR',res.bar)
+      assert.equal('two',res.woz)
+      assert.equal("'n",res.quote)
+
+	;sdb.deleteItem('simpledbtest','item1', ['foo', 'bar'],function(err,res,meta) {
+      debugres(err,res,meta)
+      assert.isNull(err)
+
+    ;sdb.getItem('simpledbtest','item1',function(err,res,meta){
+      debugres(err,res,meta)
+	  assert.isNull(err)
+      assert.equal('item1',res.$ItemName)
+      assert.isNull(res.foo)
+      assert.isNull(res.bar)
+      assert.equal('two',res.woz)
+      assert.equal("'n",res.quote)
+
     ;sdb.deleteItem('simpledbtest','item1',function(err,res,meta){
       debugres(err,res,meta)
       assert.isNull(err)
@@ -331,7 +356,7 @@ module.exports = {
       debugres(err,res,meta)
       assert.isNotNull(err)
 
-    }) }) }) }) }) }) }) }) }) }) }) }) }) }) }) }) })
+    }) }) }) }) }) }) }) }) }) }) }) }) }) }) }) }) }) }) }) }) })
   },
 
   example: function() {
@@ -363,6 +388,13 @@ function debugres(err,res,meta) {
   */
 }
 
+assert.isNull = function(obj) {
+	return null == obj;
+}
+
+assert.isNotNull = function(obj) {
+	return null != obj;
+}
 
 if( 'run' == process.argv[2] ) {
   for( fname in module.exports ) {

@@ -341,6 +341,10 @@ deleted.
     sdb.deleteItem('<domain>','<itemname>',[ '<attr>', ... ]function( error, result, meta ){
       console.log("I felt like destroying something beautiful. "+JSON.stringify(res)) 
     })
+	
+	sdb.deleteItem('<domain>','<itemname>',{ '<attr>': [<value1>, ... ], ... }function( error, result, meta ){
+      console.log("I don't know what to write about. "+JSON.stringify(res)) 
+    })
 
 
 ### select: `sdb.select( query, override, callback )`
