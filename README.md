@@ -80,7 +80,7 @@ function was successful then _error_ is _null_.
 
 So, you check if _error_ is _null_ to see if you can continue working:
 
-    sdb.listDomains( functions( error, result, meta ) {
+    sdb.listDomains( function( error, result, meta ) {
       if( error ) {
         console.log('listDomains failed: '+error.Message )
       }
@@ -304,7 +304,9 @@ _$AsArrays_ meta-directive in the _override_ argument. When _true_, all
 attribute values are returned as arrays. As
 SimpleDb is schemaless, it is not possible to know in advance if an attribute
  is multi-valued. In the default case, `{$AsArrays:false}`,
-multiple values are returned as string, with the value list comma-separated.
+multiple values are returned as string, with the value list
+comma-separated. SimpleDB returns multiple values in alphabetical
+order.
 
     sdb.getItem('<domain>','<itemname>',function( error , result, meta ){
       console.log("Those are good burgers, Walter: "+JSON.stringify(res)) 
@@ -328,8 +330,13 @@ _simpledb.SimpleDB_. Or you can set it on a case-by-case basis, using an overrid
   * _override_: (optional) SimpleDB attributes to override function defaults
   * _callback_: (required) callback function accepting parameters _callback(error, result, metadata)_
 
-Delete an item from SimpleDB. The _attrs_ argument is an optional
-array of attribute names. If not present, the item is completely
+Delete an item from SimpleDB. The _attrs_ argument is optional, and can be:
+  * an array of attribute names: all matching attributes will be deleted
+  * an object whose properties are attribute names: 
+attributes of the item will be deleted if they have the same value as the object properties.
+Values can be either a single string, or an array of string values, in which case all matching attributes are deleted.
+
+If no attributes are specified, the item is completely
 removed. If present, only the specified attributes are removed. If all
 the attributes of an item are removed, then it will also be completely
 deleted.
@@ -338,13 +345,16 @@ deleted.
       console.log("Well, Ted, like I said the last time: it won't happen again: "+JSON.stringify(res)) 
     })
 
-    sdb.deleteItem('<domain>','<itemname>',[ '<attr>', ... ]function( error, result, meta ){
+    sdb.deleteItem('<domain>','<itemname>',[ '<attr>', ... ], function( error, result, meta ){
       console.log("I felt like destroying something beautiful. "+JSON.stringify(res)) 
     })
 	
-	sdb.deleteItem('<domain>','<itemname>',{ '<attr>': [<value1>, ... ], ... }function( error, result, meta ){
-      console.log("I don't know what to write about. "+JSON.stringify(res)) 
-    })
+    sdb.deleteItem('<domain>','<itemname>',
+      { '<attr1>': '<value1>', 'attr2': ['<value2>, ... ], ... }, 
+      function( error, result, meta ){
+        console.log("I don't know what to write about. "+JSON.stringify(res)) 
+      }
+    )
 
 
 ### select: `sdb.select( query, override, callback )`

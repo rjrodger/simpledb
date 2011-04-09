@@ -7,7 +7,7 @@ var eyes = require('eyes')
 
 var simpledb = require('../lib/simpledb.js')
 
-var keys = require('./keys.mine.js')
+var keys = require('./keys.js')
 
 
 module.exports = {
@@ -207,17 +207,17 @@ module.exports = {
 
 
     ;sdb.createDomain('simpledbtest',function(err,res,meta){
-      debugres(err,res,meta)
+      debugres(null, err,res,meta)
       assert.isNull(err)
 
     ;sdb.domainMetadata('simpledbtest',function(err,res,meta){
-      debugres(err,res,meta)
+      debugres(null, err,res,meta)
       assert.isNull(err)
 
       sdb.handle = againhandle
  
     ;sdb.listDomains(function(err,res,meta){
-      debugres(err,res,meta)
+      debugres(null, err,res,meta)
       assert.isNull(err)
       assert.ok( 2 <= meta.trycount )
       assert.ok( Array.isArray(res) )
@@ -230,34 +230,37 @@ module.exports = {
       {
         foo:1,
         bar:'BAR',
-        woz:['one','two'],
+        woz:['one','two','three','four'],
         quote:"'n"
       },function(err,res,meta){
-      debugres(err,res,meta)
+      debugres(null, err,res,meta)
       assert.isNull(err)
 
     ;sdb.getItem('simpledbtest','not-an-item',function(err,res,meta){
-      debugres(err,res,meta)
+      debugres(null, err,res,meta)
       assert.isNull(err)
       assert.isNull(res)
 
     ;sdb.getItem('simpledbtest','item1',function(err,res,meta){
-      debugres(err,res,meta)
+      debugres(null, err,res,meta)
       assert.isNull(err)
       assert.equal('item1',res.$ItemName)
       assert.equal(1,parseInt(res.foo,10))
       assert.equal('BAR',res.bar)
-      assert.equal('one,two',res.woz)
+      assert.equal('four,one,three,two',res.woz)
       assert.equal("'n",res.quote)
 
     ;sdb.getItem('simpledbtest','item1',{$AsArrays:true},function(err,res,meta){
-      debugres(err,res,meta)
+      debugres(null, err,res,meta)
       assert.isNull(err)
       assert.equal('item1',res.$ItemName)
       assert.equal(1,parseInt(res.foo[0],10))
       assert.equal('BAR',res.bar[0])
-      assert.equal('one',res.woz[0])
-      assert.equal('two',res.woz[1])
+      assert.equal('four',res.woz[0])
+      assert.equal('one',res.woz[1])
+      assert.equal('three',res.woz[2])
+      assert.equal('two',res.woz[3])
+      assert.equal(4,res.woz.length)
       assert.equal("'n",res.quote[0])
 
     ;sdb.request("GetAttributes", 
@@ -267,31 +270,32 @@ module.exports = {
         ConsistentRead:'true'
       },
       function(err,res,meta){
-        debugres(err,res,meta)
+        debugres(null, err,res,meta)
         assert.isNull(err)
-        assert.equal( 5, res.GetAttributesResult.Attribute.length )
+        assert.equal( 7, res.GetAttributesResult.Attribute.length )
         
+
     ;sdb.select("not a select expression at all at all",function(err,res,meta){
-      debugres(err,res,meta)
+      debugres(null, err,res,meta)
       assert.isNotNull(err)
       assert.equal( 'InvalidQueryExpression', err.Code )
 
     ;sdb.select("select * from simpledbtest where bar = 'BAR'",function(err,res,meta){
-      debugres(err,res,meta)
+      debugres(null, err,res,meta)
       assert.isNull(err)
       assert.ok( 1 == res.length )
       assert.equal('item1',res[0].$ItemName)
       assert.equal( 'BAR', res[0].bar )
 
     ;sdb.select("select * from simpledbtest where bar = '?'",['BAR'],function(err,res,meta){
-      debugres(err,res,meta)
+      debugres(null, err,res,meta)
       assert.isNull(err)
       assert.ok( 1 == res.length )
       assert.equal('item1',res[0].$ItemName)
       assert.equal( 'BAR', res[0].bar )
 
     ;sdb.select("select * from simpledbtest where bar = '?' and quote = '?'",['BAR',"'n"],function(err,res,meta){
-      debugres(err,res,meta)
+      debugres(null, err,res,meta)
       assert.isNull(err)
       assert.ok( 1 == res.length )
       assert.equal('item1',res[0].$ItemName)
@@ -301,12 +305,13 @@ module.exports = {
       [ 
         { $ItemName:'b1', batch:'yes', field:'one'}, 
         { $ItemName:'b2', batch:'yes', field:'two'}
-      ],function(err,res,meta){
-      debugres(err,res,meta)
+      ],
+      function(err,res,meta){
+      debugres(null, err,res,meta)
       assert.isNull(err)
 
     ;sdb.select("select * from simpledbtest where batch = 'yes'",function(err,res,meta){
-      debugres(err,res,meta)
+      debugres(null, err,res,meta)
       assert.isNull(err)
       assert.ok( 2 == res.length )
       assert.equal('b1',res[0].$ItemName)
@@ -314,37 +319,58 @@ module.exports = {
       assert.equal('b2',res[1].$ItemName)
       assert.equal('two', res[1].field )
 
-	;sdb.deleteItem('simpledbtest','item1', {'woz': ['one']},function(err,res,meta) {
-      debugres(err,res,meta)
+      
+    // delete individual attr by value but leave item in place
+    ;sdb.deleteItem('simpledbtest','item1', {'woz':'one'},function(err,res,meta) {
+      debugres(null, err,res,meta)
+
 
     ;sdb.getItem('simpledbtest','item1',function(err,res,meta){
-      debugres(err,res,meta)
+      debugres(null, err,res,meta)
       assert.isNull(err)
       assert.equal('item1',res.$ItemName)
       assert.equal(1,parseInt(res.foo,10))
       assert.equal('BAR',res.bar)
-      assert.equal('two',res.woz)
+      assert.equal('four,three,two',res.woz)
       assert.equal("'n",res.quote)
 
-	;sdb.deleteItem('simpledbtest','item1', ['foo', 'bar'],function(err,res,meta) {
-      debugres(err,res,meta)
+
+    // delete individual attr by values but leave item in place
+    ;sdb.deleteItem('simpledbtest','item1', {'woz': ['two','three']},function(err,res,meta) {
+      debugres(null, err,res,meta)
+
+    ;sdb.getItem('simpledbtest','item1',function(err,res,meta){
+      debugres(null, err,res,meta)
+      assert.isNull(err)
+      assert.equal('item1',res.$ItemName)
+      assert.equal(1,parseInt(res.foo,10))
+      assert.equal('BAR',res.bar)
+      assert.equal('four',res.woz)
+      assert.equal("'n",res.quote)
+
+
+    // delete individual attr by name but leave item in place
+    ;sdb.deleteItem('simpledbtest','item1', ['foo', 'bar'],function(err,res,meta) {
+      debugres(null, err,res,meta)
       assert.isNull(err)
 
     ;sdb.getItem('simpledbtest','item1',function(err,res,meta){
-      debugres(err,res,meta)
-	  assert.isNull(err)
+      debugres(null,err,res,meta)
+      assert.isNull(err)
       assert.equal('item1',res.$ItemName)
-      assert.isNull(res.foo)
-      assert.isNull(res.bar)
-      assert.equal('two',res.woz)
+      assert.isUndefined(res.foo)
+      assert.isUndefined(res.bar)
+      assert.equal('four',res.woz)
       assert.equal("'n",res.quote)
 
+
     ;sdb.deleteItem('simpledbtest','item1',function(err,res,meta){
-      debugres(err,res,meta)
+      debugres(null, err,res,meta)
       assert.isNull(err)
 
+
     ;sdb.deleteDomain('simpledbtest',function(err,res,meta){
-      debugres(err,res,meta)
+      debugres(null, err,res,meta)
       assert.isNull(err)
 
 
@@ -353,10 +379,39 @@ module.exports = {
       //eyes.inspect(sdb)
    
     ;sdb.listDomains(function(err,res,meta){
-      debugres(err,res,meta)
+      debugres(null, err,res,meta)
       assert.isNotNull(err)
 
-    }) }) }) }) }) }) }) }) }) }) }) }) }) }) }) }) }) }) }) }) })
+
+    }) // listDomains 
+
+    }) // deleteDomain
+
+    }) // deleteItem
+    }) // getItem
+    }) // deleteItem
+    }) // getItem
+    }) // deleteItem 
+    }) // getItem
+    }) // deleteItem
+
+    }) // select
+    }) // batchPutItem
+
+    }) // select 
+    }) // select
+    }) // select
+    }) // select
+
+    }) // request
+    }) // getItem
+    }) // getItem
+    }) // getItem
+    }) // putItem
+
+    }) // listDomains
+    }) // domainMetadata
+    }) // createDomain
   },
 
   example: function() {
@@ -378,23 +433,17 @@ module.exports = {
 }
 
 
-function debugres(err,res,meta) {
-  /*
-  util.debug(
-    '\nerr: '+JSON.stringify(err)+
-    '\nres: '+JSON.stringify(res)+
-    '\nmeta:'+JSON.stringify(meta)
-  )
-  */
+function debugres(note, err,res,meta) {
+  if( note ) {
+    util.debug(
+      '\nnote: '+JSON.stringify(err)+
+        '\nerr: '+JSON.stringify(err)+
+        '\nres: '+JSON.stringify(res)+
+        '\nmeta:'+JSON.stringify(meta)
+    )
+  }
 }
 
-assert.isNull = function(obj) {
-	return null == obj;
-}
-
-assert.isNotNull = function(obj) {
-	return null != obj;
-}
 
 if( 'run' == process.argv[2] ) {
   for( fname in module.exports ) {
