@@ -374,7 +374,7 @@ If you need to handle _NextToken_ you'll need to do this manually with
 the override argument. You can get the _NextToken_ from the _meta_ parameter to your callback.
 
     sdb.select("select * from <domain> where <attribute> = '<value>'",function( error, result, meta ){
-      console.log("I'll get you, my pretty, and your little dog too! "+JSON.stringify(res)) 
+      console.log("I'll get you, my pretty, and your little dog too! "+JSON.stringify(result)+" "+JSON.stringify(meta)) 
     })
 
 
