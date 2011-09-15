@@ -2,7 +2,7 @@
 
 If you're using this library, feel free to contact me on twitter if you have any questions! :) [@rjrodger](http://twitter.com/rjrodger)
 
-Current Version: 0.0.6
+Current Version: 0.0.7
 
 Tested on: node 0.4.4
 
@@ -45,6 +45,7 @@ Core Functions:
    * deleteDomain   (_"DeleteDomain"_)
    * putItem        (_"PutAttributes"_)
    * batchPutItem   (_"BatchPutAttributes"_)
+   * batchDeleteItem   (_"BatchDeleteAttributes"_)
    * getItem        (_"GetAttributes"_)
    * deleteItem     (_"DeleteAttributes"_)
    * select         (_"Select"_)
@@ -287,6 +288,25 @@ _$ItemName_ meta-attribute that specifies the name of the item.
         { $ItemName:'<itemname2>', <attr>:'<value>', ...}
       ],function(err,res,meta){
         console.log("And what was your ownership share diluted down to?"+JSON.stringify(res)) 
+      })
+      
+### batchDeleteItem: `sdb.batchDeleteItem( domain, items, override, callback )`
+
+  * _domain_: (required) the name of the domain
+  * _items_: (required) the list of items to delete
+  * _override_: (optional) SimpleDB attributes to override function defaults
+  * _callback_: (required) callback function accepting parameters _callback(error, result, metadata)_
+
+Delete multiple items in one request. This is more efficient. The _items_
+argument is an array of item objects. Each item object must have a
+_$ItemName_ meta-attribute that specifies the name of the item.
+
+    sdb.batchDeleteItem('<domain>',
+      [ 
+        { $ItemName:'<itemname1>', <attr>:'<value>', ...}, 
+        { $ItemName:'<itemname2>', <attr>:'<value>', ...}
+      ],function(err,res,meta){
+        console.log("Done"+JSON.stringify(res)) 
       })
 
 
