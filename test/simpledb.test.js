@@ -100,6 +100,39 @@ module.exports = {
 
     tests[testI]()
   },
+  
+  batchDelete: function() {
+	  sdb = new simpledb.SimpleDB({keyid:keys.id, secret:keys.secret}, simpledb.debuglogger);
+	  
+	  sdb.createDomain('batchDeleteTest', function(err,res,meta) {
+		  assert.isNull(err);
+		  sdb.batchPutItem('batchDeleteTest', [ 
+		                     { $ItemName:'i1', batch:'yes', field:'one'}, 
+		                     { $ItemName:'i2', batch:'yes', field:'two'},
+		                     { $ItemName:'i3', batch:'yes', attr:'three'},
+		                     { $ItemName:'i4', batch:'yes', xjk:'ui'}
+		                   ], function(err, res, meta) {
+			  assert.isNull(err);
+			  sdb.batchDeleteItem('batchDeleteTest', 
+					  [{$ItemName:'i2'}, {$ItemName:'i3'}, {$ItemName:'i4', batch:'yes'}],
+					  function(err, res, meta) {
+				  assert.isNull(err);
+				  sdb.select('select * from batchDeleteTest', function(err, res, meta) {
+					  assert.isNull(err);
+					  assert.ok(res.length==2, 'should only be 2 items');
+					  assert.equal(JSON.stringify(res), JSON.stringify(
+					  [{"$ItemName":"i1","batch":"yes","field":"one"},{"$ItemName":"i4","xjk":"ui"}]));
+					  
+					  sdb.deleteDomain('batchDeleteTest', function(err, res, meta) {
+						  assert.isNull(err);
+					  });
+				  });
+			  });
+		  });
+	  });
+	      
+	    
+  },
 
   simpledb: function() {
     var sdb = null
