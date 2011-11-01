@@ -1,0 +1,5 @@
+edit package.json
+git tag x.y.z
+git push --tags
+cd ..
+sh simpledb/man/makepackage.sh

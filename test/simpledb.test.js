@@ -7,7 +7,9 @@ var eyes = require('eyes')
 
 var simpledb = require('../lib/simpledb.js')
 
-var keys = require('./keys.js')
+var keys = require('./keys.mine.js')
+
+var awshost = 'sdb.amazonaws.com'
 
 
 module.exports = {
@@ -186,8 +188,9 @@ module.exports = {
 
 
     // the real deal
-    sdb = new simpledb.SimpleDB({keyid:keys.id,secret:keys.secret},simpledb.debuglogger)
-    //eyes.inspect(sdb)
+    eyes.inspect(keys)
+    sdb = new simpledb.SimpleDB({keyid:keys.id,secret:keys.secret,host:keys.host||awshost},simpledb.debuglogger)
+    eyes.inspect(sdb)
 
     var orighandle = sdb.handle
     var againhandle = function(op,q,start,tryI,last,res,stop,callback){
@@ -318,7 +321,6 @@ module.exports = {
       assert.equal('one', res[0].field )
       assert.equal('b2',res[1].$ItemName)
       assert.equal('two', res[1].field )
-
       
     // delete individual attr by value but leave item in place
     ;sdb.deleteItem('simpledbtest','item1', {'woz':'one'},function(err,res,meta) {
@@ -416,7 +418,7 @@ module.exports = {
 
   example: function() {
     var keys = require('./keys.mine.js')
-    sdb = new simpledb.SimpleDB({keyid:keys.id,secret:keys.secret},simpledb.debuglogger)
+    sdb = new simpledb.SimpleDB({keyid:keys.id,secret:keys.secret,host:keys.host||awshost},simpledb.debuglogger)
 
     sdb.createDomain( 'yourdomain', function( error ) {
 
