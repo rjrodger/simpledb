@@ -10,7 +10,7 @@
     "John Roberts <jroberts@logitech.com>"
   ],
   "dependencies": {
-      "aws-lib": "0.0.5"
+      "aws-lib": "git://github.com/livelycode/aws-lib.git#46b88355d6c2117447c4c4b0252aa7a4953ad74e"
   },
   "main": "lib/simpledb",
   "directories": {
