@@ -156,7 +156,7 @@ module.exports = {
     sdb = new simpledb.SimpleDB({keyid:'foo',secret:'bar',test:true},simpledb.debuglogger)
 
     function nocallback(f){
-      try { sdb[f](); assert.fail() } catch(e) { assert.equal('no callback function',e) }
+      try { sdb[f](); assert.fail() } catch(e) { assert.equal('simpledb: no callback function',e) }
     }
 
     nocallback('listDomains')
@@ -167,7 +167,7 @@ module.exports = {
           //eyes.inspect(err)
           assert.isNotNull(err)
           assert.equal('$Library',err.Code)
-          assert.equal(name+suffix,err.Message) 
+          assert.equal('simpledb: '+name+suffix,err.Message) 
         }
       } 
       var calls = [[null,' is null'],['',' is empty'],[{},' is not a string']]
