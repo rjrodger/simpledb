@@ -2,9 +2,9 @@
 
 If you're using this library, feel free to contact me on twitter if you have any questions! :) [@rjrodger](http://twitter.com/rjrodger)
 
-Current Version: 0.0.7
+Current Version: 0.0.8
 
-Tested on: node 0.4.4
+Tested on: node 0.4.12
 
 A user-friendly **fault-tolerant** library for Amazon AWS SimpleDB access. The core
 SimpleDB actions are mapped to functions:
@@ -39,17 +39,17 @@ Key Features:
 
 Core Functions:
 
-   * createDomain   (_"CreateDomain"_)
-   * domainMetadata (_"DomainMetadata"_)
-   * listDomains    (_"ListDomains"_)
-   * deleteDomain   (_"DeleteDomain"_)
-   * putItem        (_"PutAttributes"_)
-   * batchPutItem   (_"BatchPutAttributes"_)
-   * batchDeleteItem   (_"BatchDeleteAttributes"_)
-   * getItem        (_"GetAttributes"_)
-   * deleteItem     (_"DeleteAttributes"_)
-   * select         (_"Select"_)
-   * request        (any action)
+   * createDomain     (_"CreateDomain"_)
+   * domainMetadata   (_"DomainMetadata"_)
+   * listDomains      (_"ListDomains"_)
+   * deleteDomain     (_"DeleteDomain"_)
+   * putItem          (_"PutAttributes"_)
+   * batchPutItem     (_"BatchPutAttributes"_)
+   * batchDeleteItem  (_"BatchDeleteAttributes"_)
+   * getItem          (_"GetAttributes"_)
+   * deleteItem       (_"DeleteAttributes"_)
+   * select           (_"Select"_)
+   * request          (any action)
 
 This is still an early version so there's probably some wierdness - use at your risk.
 Secure connections are not supported on node 0.3.x.
