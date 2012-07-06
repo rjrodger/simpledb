@@ -10,7 +10,7 @@
     "John Roberts <jroberts@logitech.com>"
   ],
   "dependencies": {
-      "aws-lib": "0.0.5"
+      "aws-lib": "0.0.6"
   },
   "main": "lib/simpledb",
   "directories": {
