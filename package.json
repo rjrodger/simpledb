@@ -1,7 +1,14 @@
 {
   "name": "simpledb",
   "description": "An Amazon AWS SimpleDB library for Node.js that is user-friendly and fault-tolerant",
-  "keywords": ["amazon","aws","simpledb","database","wrapper","api"],
+  "keywords": [
+    "amazon",
+    "aws",
+    "simpledb",
+    "database",
+    "wrapper",
+    "api"
+  ],
   "version": "0.0.8",
   "homepage": "https://github.com/rjrodger/simpledb",
   "author": "Richard Rodger <richard@ricebridge.com> (http://richardrodger.com/)",
@@ -10,14 +17,20 @@
     "John Roberts <jroberts@logitech.com>"
   ],
   "dependencies": {
-      "aws-lib": "0.0.5"
+    "aws-lib": "0.0.5"
   },
   "main": "lib/simpledb",
   "directories": {
     "lib": "lib"
   },
-  "repository": { "type" : "git", "url" : "https://github.com/rjrodger/simpledb.git" },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rjrodger/simpledb.git"
+  },
   "engines": {
     "node": "*"
+  },
+  "devDependencies": {
+    "nid": "~0.3.0"
   }
 }

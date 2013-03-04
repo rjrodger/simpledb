@@ -1,9 +1,12 @@
-/* Copyright (c) 2011 Richard Rodger */
+/* Copyright (c) 2011-2013 Richard Rodger, BSD License */
 
 
 var util = require('util')
 var assert = require('assert')
+
 var eyes = require('eyes')
+var nid  = require('nid')
+
 
 var simpledb = require('../lib/simpledb.js')
 
@@ -460,6 +463,32 @@ module.exports = {
         sdb.getItem('yourdomain', 'item1', function( error, result ) {
           console.log( 'field1 = '+result.field1 )
           console.log( 'field2 = '+result.field2 )
+        })
+      })
+    })
+  },
+
+  putItemHappy: function() {
+    var keys = require('./keys.mine.js')
+    sdb = new simpledb.SimpleDB({keyid:keys.id,secret:keys.secret,host:keys.host||awshost})//,simpledb.debuglogger)
+
+    var itemid = nid()
+
+    sdb.createDomain( 'yourdomain', function( error ) {
+
+      sdb.putItem('yourdomain', 'put-'+itemid, {field1:'one'}, function( error ) {
+        sdb.getItem('yourdomain', 'put-'+itemid, function( error, result ) {
+          //console.dir(result)
+          //console.log( 'field1 = '+result.field1 )
+          assert.equal(result.field1, 'one')
+
+          sdb.putItem('yourdomain', 'put-'+itemid, {field1:'ONE'}, function( error ) {
+            sdb.getItem('yourdomain', 'put-'+itemid, function( error, result ) {
+              //console.dir(result)
+              //console.log( 'field1 = '+result.field1 )
+              assert.equal(result.field1, 'ONE')
+            })
+          })
         })
       })
     })
