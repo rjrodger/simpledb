@@ -105,20 +105,20 @@ module.exports = {
 
     tests[testI]()
   },
-  
+
   batchDelete: function() {
 	  sdb = new simpledb.SimpleDB({keyid:keys.id, secret:keys.secret}, simpledb.debuglogger);
-	  
+
 	  sdb.createDomain('batchDeleteTest', function(err,res,meta) {
 		  assert.isNull(err);
-		  sdb.batchPutItem('batchDeleteTest', [ 
-		                     { $ItemName:'i1', batch:'yes', field:'one'}, 
+		  sdb.batchPutItem('batchDeleteTest', [
+		                     { $ItemName:'i1', batch:'yes', field:'one'},
 		                     { $ItemName:'i2', batch:'yes', field:'two'},
 		                     { $ItemName:'i3', batch:'yes', attr:'three'},
 		                     { $ItemName:'i4', batch:'yes', xjk:'ui'}
 		                   ], function(err, res, meta) {
 			  assert.isNull(err);
-			  sdb.batchDeleteItem('batchDeleteTest', 
+			  sdb.batchDeleteItem('batchDeleteTest',
 					  [{$ItemName:'i2'}, {$ItemName:'i3'}, {$ItemName:'i4', batch:'yes'}],
 					  function(err, res, meta) {
 				  assert.isNull(err);
@@ -127,7 +127,7 @@ module.exports = {
 					  assert.ok(res.length==2, 'should only be 2 items');
 					  assert.equal(JSON.stringify(res), JSON.stringify(
 					  [{"$ItemName":"i1","batch":"yes","field":"one"},{"$ItemName":"i4","xjk":"ui"}]));
-					  
+
 					  sdb.deleteDomain('batchDeleteTest', function(err, res, meta) {
 						  assert.isNull(err);
 					  });
@@ -135,8 +135,8 @@ module.exports = {
 			  });
 		  });
 	  });
-	      
-	    
+
+
   },
 
   simpledb: function() {
@@ -165,14 +165,14 @@ module.exports = {
     nocallback('listDomains')
 
     function nostring(i,f,name){
-      var cberr = function(suffix) { 
+      var cberr = function(suffix) {
         return function(err){
           //eyes.inspect(err)
           assert.isNotNull(err)
           assert.equal('$Library',err.Code)
-          assert.equal('simpledb: '+name+suffix,err.Message) 
+          assert.equal('simpledb: '+name+suffix,err.Message)
         }
-      } 
+      }
       var calls = [[null,' is null'],['',' is empty'],[{},' is not a string']]
       calls.forEach(function(spec){
         var av   = spec[0]
@@ -254,7 +254,7 @@ module.exports = {
       assert.isNull(err)
 
       sdb.handle = againhandle
- 
+
     ;sdb.listDomains(function(err,res,meta){
       debugres(null, err,res,meta)
       assert.isNull(err)
@@ -264,7 +264,7 @@ module.exports = {
       assert.equal(2, meta.trycount) // retry server errors
 
       sdb.handle = orighandle
-      
+
     ;sdb.putItem('simpledbtest','item1',
       {
         foo:1,
@@ -302,7 +302,7 @@ module.exports = {
       assert.equal(4,res.woz.length)
       assert.equal("'n",res.quote[0])
 
-    ;sdb.request("GetAttributes", 
+    ;sdb.request("GetAttributes",
       {
         DomainName:'simpledbtest',
         ItemName:'item1',
@@ -312,7 +312,7 @@ module.exports = {
         debugres(null, err,res,meta)
         assert.isNull(err)
         assert.equal( 7, res.GetAttributesResult.Attribute.length )
-        
+
 
     ;sdb.select("not a select expression at all at all",function(err,res,meta){
       debugres(null, err,res,meta)
@@ -341,8 +341,8 @@ module.exports = {
       assert.equal( 'BAR', res[0].bar )
 
     ;sdb.batchPutItem('simpledbtest',
-      [ 
-        { $ItemName:'b1', batch:'yes', field:'one'}, 
+      [
+        { $ItemName:'b1', batch:'yes', field:'one'},
         { $ItemName:'b2', batch:'yes', field:'two'}
       ],
       function(err,res,meta){
@@ -357,7 +357,7 @@ module.exports = {
       assert.equal('one', res[0].field )
       assert.equal('b2',res[1].$ItemName)
       assert.equal('two', res[1].field )
-      
+
     // delete individual attr by value but leave item in place
     ;sdb.deleteItem('simpledbtest','item1', {'woz':'one'},function(err,res,meta) {
       debugres(null, err,res,meta)
@@ -415,13 +415,13 @@ module.exports = {
       // test bad key
       sdb = new simpledb.SimpleDB({keyid:'foo',secret:'bar'})
       //eyes.inspect(sdb)
-   
+
     ;sdb.listDomains(function(err,res,meta){
       debugres(null, err,res,meta)
       assert.isNotNull(err)
 
 
-    }) // listDomains 
+    }) // listDomains
 
     }) // deleteDomain
 
@@ -429,14 +429,14 @@ module.exports = {
     }) // getItem
     }) // deleteItem
     }) // getItem
-    }) // deleteItem 
+    }) // deleteItem
     }) // getItem
     }) // deleteItem
 
     }) // select
     }) // batchPutItem
 
-    }) // select 
+    }) // select
     }) // select
     }) // select
     }) // select
@@ -459,7 +459,7 @@ module.exports = {
     sdb.createDomain( 'yourdomain', function( error ) {
 
       sdb.putItem('yourdomain', 'item1', {field1:'one', field2:'two'}, function( error ) {
-      
+
         sdb.getItem('yourdomain', 'item1', function( error, result ) {
           console.log( 'field1 = '+result.field1 )
           console.log( 'field2 = '+result.field2 )
@@ -491,6 +491,64 @@ module.exports = {
           })
         })
       })
+    })
+  },
+
+  nolimit: function() {
+    var keys = require('./keys.mine.js')
+    sdb = new simpledb.SimpleDB({keyid:keys.id,secret:keys.secret,host:keys.host||awshost,nolimit:true},simpledb.debuglogger)
+
+    var count = remaining = 3000
+    var batch = 25
+    var domain = 'test_simpledb_nolimit'
+
+    function createItems( cb ){
+
+      var items = [];
+      for(var i = 0; i < batch; i++){
+          var itemid = nid();
+          items.push({ $ItemName:'b'+itemid, batch:'yes', field:'one'});
+      }
+      // make bursts of 25 batchput requests so SimpleDB doesn't bail out
+      sdb.batchPutItem('test_simpledb_nolimit', items, function( error ) {
+        if( error ) console.log( 'error', error )
+        remaining -= batch
+        console.log( "remaining: "+ remaining)
+        // repeat until the list is exhausted
+        if( remaining ) {
+          createItems( cb )
+        } else {
+          return cb()
+        }
+      })
+    }
+
+    sdb.createDomain( domain, function( error ) {
+      if( error ) console.log( error );
+      // first add a lot of items (>2500)
+      console.log( 'adding 3000 items, this might take a while...')
+      createItems(function(){
+        console.log("Ready to perform nolimit tests: ")
+        console.log("- Select the full domain with no limit")
+        sdb.select('select * from '+ domain, function( error, result ) {
+            // final result should match the original count
+            assert.equal(result.length, count)
+
+        console.log("- Select the full domain with a limit of 200")
+        ;sdb.select('select * from '+ domain +' limit 200', function( error, result ) {
+            // limit should not be overwritten if set
+            assert.equal(result.length, 200)
+
+        ;sdb.deleteDomain( domain, function( error ) {
+          console.log("No limit tests completed successfully")
+
+        })
+        })
+        })
+
+
+      })
+
     })
   }
 
