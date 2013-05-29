@@ -15,7 +15,7 @@ SimpleDB actions are mapped to functions:
     sdb.createDomain( 'yourdomain', function( error ) {
 
       sdb.putItem('yourdomain', 'item1', {attr1:'one', attr2:'two'}, function( error ) {
-      
+
         sdb.getItem('yourdomain', 'item1', function( error, result ) {
           console.log( 'attr1 = '+result.attr1 )
           console.log( 'attr2 = '+result.attr2 )
@@ -77,7 +77,7 @@ a callback function as their last argument. This callback function should accept
     callback( error, result, meta )
 
 Where error is an object `({Code:'...',Message:'...'})` describing any errors that occured. If the
-function was successful then _error_ is _null_. 
+function was successful then _error_ is _null_.
 
 So, you check if _error_ is _null_ to see if you can continue working:
 
@@ -129,7 +129,7 @@ For the API examples, assume the following lines of code at the top of your sour
 
 This gives you the standard wrapper, with a basic debugger that prints to STDOUT.
 
-You should really also read the Amazon SimpleDB documentation so that you understand how SimpleDB works: 
+You should really also read the Amazon SimpleDB documentation so that you understand how SimpleDB works:
 [Amazon SimpleDB Developer Guide](http://docs.amazonwebservices.com/AmazonSimpleDB/latest/DeveloperGuide/)
 
 As a get-out-of-jail, you can provide request attribute overrides. You
@@ -241,13 +241,13 @@ Where `<domain>` is the name of your domain.
 
 Store an item in SimpleDB.
 
-    sdb.putItem('<domain>','<itemname>', 
+    sdb.putItem('<domain>','<itemname>',
       {
         <attr>:'<value>',
         ...
       },
       function(err,res,meta){
-        console.log("Memories, you're talking about memories: "+JSON.stringify(res)) 
+        console.log("Memories, you're talking about memories: "+JSON.stringify(res))
       })
 
 Where `<itemname>` is the unique name of your item, and
@@ -256,7 +256,7 @@ must be either a string or an array of strings.
 
 If you want to use conditional puts, you'll need to add some override values:
 
-    sdb.putItem('<domain>','<itemname>', 
+    sdb.putItem('<domain>','<itemname>',
       {
         <attr1>:'<value>',
         <attr2>:['<value1>','<value2>',...]
@@ -267,7 +267,7 @@ If you want to use conditional puts, you'll need to add some override values:
         'Expected.1.Value':'1'
       },
       function(err,res,meta){
-        console.log("Nobody expects the spanish inquistion! "+JSON.stringify(res)) 
+        console.log("Nobody expects the spanish inquistion! "+JSON.stringify(res))
       })
 
 
@@ -283,13 +283,13 @@ argument is an array of item objects. Each item object must have a
 _$ItemName_ meta-attribute that specifies the name of the item.
 
     sdb.batchPutItem('<domain>',
-      [ 
-        { $ItemName:'<itemname1>', <attr>:'<value>', ...}, 
+      [
+        { $ItemName:'<itemname1>', <attr>:'<value>', ...},
         { $ItemName:'<itemname2>', <attr>:'<value>', ...}
       ],function(err,res,meta){
-        console.log("And what was your ownership share diluted down to?"+JSON.stringify(res)) 
+        console.log("And what was your ownership share diluted down to?"+JSON.stringify(res))
       })
-      
+
 ### batchDeleteItem: `sdb.batchDeleteItem( domain, items, override, callback )`
 
   * _domain_: (required) the name of the domain
@@ -302,11 +302,11 @@ argument is an array of item objects. Each item object must have a
 _$ItemName_ meta-attribute that specifies the name of the item.
 
     sdb.batchDeleteItem('<domain>',
-      [ 
-        { $ItemName:'<itemname1>', <attr>:'<value>', ...}, 
+      [
+        { $ItemName:'<itemname1>', <attr>:'<value>', ...},
         { $ItemName:'<itemname2>', <attr>:'<value>', ...}
       ],function(err,res,meta){
-        console.log("Done"+JSON.stringify(res)) 
+        console.log("Done"+JSON.stringify(res))
       })
 
 
@@ -329,11 +329,11 @@ comma-separated. SimpleDB returns multiple values in alphabetical
 order.
 
     sdb.getItem('<domain>','<itemname>',function( error , result, meta ){
-      console.log("Those are good burgers, Walter: "+JSON.stringify(res)) 
+      console.log("Those are good burgers, Walter: "+JSON.stringify(res))
     })
 
     sdb.getItem('<domain>','<itemname>',{$AsArrays:true},function( error, result, meta ){
-      console.log("I've been watching television so much the shows are starting to run together: "+JSON.stringify(res)) 
+      console.log("I've been watching television so much the shows are starting to run together: "+JSON.stringify(res))
     })
 
 By default, _simpledb_ uses consistent reads. For improved
@@ -352,7 +352,7 @@ _simpledb.SimpleDB_. Or you can set it on a case-by-case basis, using an overrid
 
 Delete an item from SimpleDB. The _attrs_ argument is optional, and can be:
   * an array of attribute names: all matching attributes will be deleted
-  * an object whose properties are attribute names: 
+  * an object whose properties are attribute names:
 attributes of the item will be deleted if they have the same value as the object properties.
 Values can be either a single string, or an array of string values, in which case all matching attributes are deleted.
 
@@ -362,17 +362,17 @@ the attributes of an item are removed, then it will also be completely
 deleted.
 
     sdb.deleteItem('<domain>','<itemname>',function( error, result, meta ){
-      console.log("Well, Ted, like I said the last time: it won't happen again: "+JSON.stringify(res)) 
+      console.log("Well, Ted, like I said the last time: it won't happen again: "+JSON.stringify(res))
     })
 
     sdb.deleteItem('<domain>','<itemname>',[ '<attr>', ... ], function( error, result, meta ){
-      console.log("I felt like destroying something beautiful. "+JSON.stringify(res)) 
+      console.log("I felt like destroying something beautiful. "+JSON.stringify(res))
     })
-	
+
     sdb.deleteItem('<domain>','<itemname>',
-      { '<attr1>': '<value1>', 'attr2': ['<value2>, ... ], ... }, 
+      { '<attr1>': '<value1>', 'attr2': ['<value2>, ... ], ... },
       function( error, result, meta ){
-        console.log("I don't know what to write about. "+JSON.stringify(res)) 
+        console.log("I don't know what to write about. "+JSON.stringify(res))
       }
     )
 
@@ -394,7 +394,7 @@ If you need to handle _NextToken_ you'll need to do this manually with
 the override argument. You can get the _NextToken_ from the _meta_ parameter to your callback.
 
     sdb.select("select * from <domain> where <attribute> = '<value>'",function( error, result, meta ){
-      console.log("I'll get you, my pretty, and your little dog too! "+JSON.stringify(result)+" "+JSON.stringify(meta)) 
+      console.log("I'll get you, my pretty, and your little dog too! "+JSON.stringify(result)+" "+JSON.stringify(meta))
     })
 
 
@@ -404,17 +404,17 @@ the override argument. You can get the _NextToken_ from the _meta_ parameter to 
   * _attrs_: (required) SimpleDB request attributes
   * _callback_: (required) callback function accepting parameters _callback(error, result, metadata)_
 
-Make a direct request to SimpleDB. You're on your own! Again, read 
+Make a direct request to SimpleDB. You're on your own! Again, read
 [Amazon SimpleDB Developer Guide](http://docs.amazonwebservices.com/AmazonSimpleDB/latest/DeveloperGuide/)
 Unlike the other functions above, the _request_ function is not a SimpleDB action wrapper. Use it when the wrapper functions have painted themselves into a corner.
 
-    sdb.request("<action>", 
+    sdb.request("<action>",
       {
         <attribute>:"<value>",
         ...
       },
       function( error, result, meta ){
-        console.log("Gotta keep 'em separated: "+JSON.stringify(res)) 
+        console.log("Gotta keep 'em separated: "+JSON.stringify(res))
       })
 
 Where `<action>` is the SimpleDB action, such as _GetItem_, and `<attribute>:"<value>"` are the SimpleDB REST request attribute pairs.
@@ -430,7 +430,7 @@ The `aws-lib` client object. Use this to send raw requests. Go hardcore.
    * _start_: Date object, start time of request
    * _action_: string, name of SimpleDB action
    * _query_: full SimpleDB query
-   * _tryIndex_: number of tries attempted, up to maxtry 
+   * _tryIndex_: number of tries attempted, up to maxtry
    * _last_: true if this is the last request that will be made
    * _response_: result from SimpleDB
    * _stop_: stop(true|false), function to stop retries in case of errors
@@ -442,7 +442,7 @@ and then call the original function. Also good for testing.
 
 This example counts the number of requests made:
 
-    var resultcount = 0    
+    var resultcount = 0
 
     var orighandle = sdb.handle
     sdb.handle = function(start,action,query,tryIndex,last,response,stop,callback){
@@ -467,6 +467,7 @@ The additional options that can be given to _simpledb.SimpleDB_ are:
    * _delayscale_: (optional, default=100), delay multiplier, in milliseconds
    * _randomdelay_: (optional, default=true), apply a random delay multiplier between 0 and 1
    * _expbase_: (optional, default=4), exponent base, for the formula that calculates delay time when SimpleDB fails
+   * _nolimit_: (optional, default=false), if true, it will return results over the max limit of 2500 with subsequent api requests
 
 
 ## Logging
@@ -500,7 +501,7 @@ For _type=handle_, fired after each response from SimpleDB, the arguments are:
    * _start_: Date object, start time of request
    * _action_: string, name of SimpleDB action
    * _query_: full SimpleDB query
-   * _tryIndex_: number of tries attempted, up to maxtry 
+   * _tryIndex_: number of tries attempted, up to maxtry
    * _last_: true if this is the last request that will be made
    * _response_: result from SimpleDB
 
@@ -509,7 +510,7 @@ For _type=error_, fired after any response with an error, the arguments are:
    * _start_: Date object, start time of request
    * _action_: string, name of SimpleDB action
    * _query_: full SimpleDB query
-   * _tryIndex_: number of tries attempted, up to maxtry 
+   * _tryIndex_: number of tries attempted, up to maxtry
    * _last_: true if this is the last request that will be made
    * _retry_: true if a retry will be attempted
    * _err_: the error that occurred, an object like {Code:'...',Message:'...'}, where _Code_ is the Amazon error code
@@ -546,4 +547,4 @@ Here's some more information on SimpleDB:
 ## Hacking around with real time charts
 
 ![](http://chartaca.com/point/adb6995d-b4b3-4edf-8892-a6d1a232483d/s.gif)
-[Chartaca Hit Chart](http://chartaca.com/adb6995d-b4b3-4edf-8892-a6d1a232483d) 
+[Chartaca Hit Chart](http://chartaca.com/adb6995d-b4b3-4edf-8892-a6d1a232483d)
