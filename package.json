@@ -14,7 +14,8 @@
   "author": "Richard Rodger <richard@ricebridge.com> (http://richardrodger.com/)",
   "contributors": [
     "Richard Rodger <richard@ricebridge.com> (http://richardrodger.com/)",
-    "John Roberts <jroberts@logitech.com>"
+    "John Roberts <jroberts@logitech.com>",
+    "Makis Tracend <makis@makesit.es> (http://makesites.org/)"
   ],
   "dependencies": {
     "aws-lib": "0.0.5"
