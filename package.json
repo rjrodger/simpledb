@@ -9,7 +9,7 @@
     "wrapper",
     "api"
   ],
-  "version": "0.0.8",
+  "version": "0.0.9",
   "homepage": "https://github.com/rjrodger/simpledb",
   "author": "Richard Rodger <richard@ricebridge.com> (http://richardrodger.com/)",
   "contributors": [
