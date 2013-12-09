@@ -2,9 +2,9 @@
 
 If you're using this library, feel free to contact me on twitter if you have any questions! :) [@rjrodger](http://twitter.com/rjrodger)
 
-Current Version: 0.0.8
+Current Version: 0.0.9
 
-Tested on: node 0.4.12
+Tested on: node 0.8.12
 
 A user-friendly **fault-tolerant** library for Amazon AWS SimpleDB access. The core
 SimpleDB actions are mapped to functions:
