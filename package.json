@@ -18,7 +18,7 @@
     "Makis Tracend <makis@makesit.es> (http://makesites.org/)"
   ],
   "dependencies": {
-    "aws-lib": "0.0.5"
+    "aws-lib": "0.3.0"
   },
   "main": "lib/simpledb",
   "directories": {
