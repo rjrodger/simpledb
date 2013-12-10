@@ -2,7 +2,7 @@
 
 If you're using this library, feel free to contact me on twitter if you have any questions! :) [@rjrodger](http://twitter.com/rjrodger)
 
-Current Version: 0.0.9
+Current Version: 0.1.0
 
 Tested on: node 0.8.12
 
