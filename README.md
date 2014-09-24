@@ -4,6 +4,12 @@ If you're using this library, feel free to contact me on twitter if you have any
 
 NOTE: this project follows the [Open-Open](https://github.com/rvagg/node-levelup/blob/master/CONTRIBUTING.md) policy - if you submit a pull request or an issue, you get commit rights, so feel free to merge yourself after asking for feedback from the other contribs.
 
+IMPORTANT: YOUR CODE CONTRIBUTIONS (if any) ARE MADE UNDER THE MIT LICENSE. By submitting a pull request or issue you indicate agreement with this condition.
+
+Please open an issue to indicate a release should be published to NPM, and we can discuss.
+
+
+
 Current Version: 0.1.0
 
 Tested on: node 0.8.12
