@@ -494,6 +494,17 @@ module.exports = {
     })
   },
 
+  alldomains: function(){
+      var keys = require('./keys.mine.js')
+      sdb = new simpledb.SimpleDB({keyid:keys.id,secret:keys.secret,host:keys.host||awshost,nolimit:true},simpledb.debuglogger)
+      sdb.listDomains(function(err,res,meta){
+        debugres(null, err,res,meta)
+        assert.isNull(err)
+        console.log("Domain count:", res.length);
+        assert.isNotNull(res)
+      })
+  },
+
   nolimit: function() {
     var keys = require('./keys.mine.js')
     sdb = new simpledb.SimpleDB({keyid:keys.id,secret:keys.secret,host:keys.host||awshost,nolimit:true},simpledb.debuglogger)
