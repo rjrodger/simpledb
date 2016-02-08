@@ -10,9 +10,9 @@ Please open an issue to indicate a release should be published to NPM, and we ca
 
 
 
-Current Version: 0.1.0
+Current Version: 0.2.0
 
-Tested on: node 0.8.12
+Tested on: node 0.12.4
 
 A user-friendly **fault-tolerant** library for Amazon AWS SimpleDB access. The core
 SimpleDB actions are mapped to functions:
