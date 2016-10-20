@@ -35,7 +35,7 @@ SimpleDB actions are mapped to functions:
 library implements the exponential back-off retry algorithm as
 recommended in the SimpleDB developer guide.**
 
-This library depends on the excellent aws-lib module: [aws-lib](https://github.com/mirkok/aws-lib)
+This library depends on the excellent aws-lib module: [aws-lib](https://github.com/livelycode/aws-lib)
 
 Key Features:
 
@@ -74,7 +74,7 @@ And in your code:
 Or clone the git repository:
     git clone git://github.com/rjrodger/simpledb.git
 
-The simpledb module depends on the [aws-lib](https://github.com/mirkok/aws-lib) module. npm will install this automatically.
+The simpledb module depends on the [aws-lib](https://github.com/livelycode/aws-lib) module. npm will install this automatically.
 
 
 ## Usage
