@@ -2,7 +2,7 @@
 
 If you're using this library, feel free to contact me on twitter if you have any questions! :) [@rjrodger](http://twitter.com/rjrodger)
 
-NOTE: this project follows the [Open-Open](https://github.com/rvagg/node-levelup/blob/master/CONTRIBUTING.md) policy - if you submit a pull request or an issue, you get commit rights, so feel free to merge yourself after asking for feedback from the other contribs.
+NOTE: this project follows the [Open-Open](https://github.com/Level/community/blob/master/CONTRIBUTING.md) policy - if you submit a pull request or an issue, you get commit rights, so feel free to merge yourself after asking for feedback from the other contribs.
 
 IMPORTANT: YOUR CODE CONTRIBUTIONS (if any) ARE MADE UNDER THE MIT LICENSE. By submitting a pull request or issue you indicate agreement with this condition.
 
